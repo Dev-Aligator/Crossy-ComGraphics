@@ -5,9 +5,19 @@ export class TimeManager {
         this.light = light;
         this.currentTime = 1;
         
-        setInterval(() => {
-            this.currentTime = this.currentTime + 1;  // Assume 1 second = 1 hour in game
-        }, 1000);
+        // Only activate time system after player starts the game
+        const keyPressHandler = (event) => {
+            if (event.key === " " || event.key === "ArrowUp") {
+                this.intervalId = setInterval(() => {
+                    this.currentTime += 1;
+                }, 1000);
+
+                // Remove the event listener once started
+                document.removeEventListener("keydown", keyPressHandler);
+            }
+        };
+
+        document.addEventListener("keydown", keyPressHandler);
 
 
         this.changeLightColorWithTransition = () => {
