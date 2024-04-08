@@ -9,6 +9,7 @@ import Feathers from './Particles/Feathers';
 import Water from './Particles/Water';
 import Rows from './Row';
 import { Fill } from './Row/Grass';
+import { TimeManager } from './TimeManager';
 
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
@@ -42,7 +43,10 @@ export class CrossyScene extends Scene {
     this.add(light);
 
     this.light = light;
+    const timeManager = new TimeManager({light});
+    timeManager.changeLightColorWithTransition();
 
+    
     // let helper = new CameraHelper(light.shadow.camera);
     // this.add(helper);
   }
