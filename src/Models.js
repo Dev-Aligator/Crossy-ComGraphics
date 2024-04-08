@@ -174,5 +174,9 @@ export default {
       model: require('../assets/models/characters/juwan/juwan.obj'),
       texture: require('../assets/models/characters/juwan/juwan.png'),
     },
+    castle: {
+      model: require('../assets/models/characters/castle/castle.obj'),
+      texture: require('../assets/models/characters/castle/castle.png'),
+    }
   }
 }
