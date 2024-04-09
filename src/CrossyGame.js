@@ -26,10 +26,12 @@ export class CrossyScene extends Scene {
     this.add(this.worldWithCamera);
 
     const light = new DirectionalLight(0xdfebff, 1.75);
-    light.position.set(20, 30, 0.05);
+    light.position.set(20, 50, 0.05);
     light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
     light.shadow.mapSize.height = 1024 * 2;
+
+    // light.position.set(20, 50, 60);
 
     const d = 15;
     const v = 6;
@@ -41,10 +43,8 @@ export class CrossyScene extends Scene {
     light.shadow.bias = 0.0001;
 
     this.add(light);
-
     this.light = light;
     this.timeManager = new TimeManager({light});
-    this.timeManager.changeLightColorWithTransition();
     
     // let helper = new CameraHelper(light.shadow.camera);
     // this.add(helper);

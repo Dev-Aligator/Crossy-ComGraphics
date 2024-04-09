@@ -14,6 +14,9 @@ export class TimeManager {
 
                 // Remove the event listener once started
                 document.removeEventListener("keydown", keyPressHandler);
+
+                this.activateTimeSystemActions();
+
             }
         };
 
@@ -26,7 +29,7 @@ export class TimeManager {
             }
         
             const colors = [0xdfebff, 0xedb20e, 0xb52828, 0x050505];  // Colors representing day, noon, afternoon, and night
-            const nextIndex = Math.floor(this.currentTime / 8) % colors.length; // Get the index of the next color in the colors array
+            const nextIndex = (Math.floor(this.currentTime / 8) + 1) % colors.length ; // Get the index of the next color in the colors array
             const nextColor = colors[nextIndex]; // Get the next color
         
             // Animate light color change over 8 seconds using TweenMax
@@ -37,10 +40,34 @@ export class TimeManager {
                 onComplete: () => {
                     if (!this.isStopTimeOnGameOver) {
                         this.changeLightColorWithTransition(); // Call the function again after 8 seconds (transition duration is 8 seconds)
+                        if (nextIndex == colors.length - 1) {
+                            this.changeLightShadowWithTransition();
+                        } 
                     }
                 }   
             });
         };
+
+        this.changeLightShadowWithTransition = () => {
+            if (this.isStopTimeOnGameOver) {
+                return; // If stop time on game over is true, do not proceed with the transition
+            }
+            // light.castShadow = true;
+            light.position.set(20,50,0.05);
+            TweenMax.to(light.position, 24, {
+                x: -20,
+                y: 20,
+                z: 0.05,
+                onComplete: () => {
+
+                }   
+            });
+        }
+
+        this.activateTimeSystemActions = () => {
+            this.changeLightShadowWithTransition();
+            this.changeLightColorWithTransition();
+        }
 
         this.stopTimeOnGameOver = () => {
             this.isStopTimeOnGameOver = true;
