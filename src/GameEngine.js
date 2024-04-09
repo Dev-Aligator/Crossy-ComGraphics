@@ -138,6 +138,7 @@ export default class Engine {
     // Stop player from finishing a movement
     this._hero.stopAnimations();
     this.onGameEnded();
+    this.scene.timeManager.stopTimeOnGameOver();
     // this.gameState = State.Game.gameOver;
 
     // this.props.setGameState(this.gameState);

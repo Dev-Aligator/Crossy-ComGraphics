@@ -43,9 +43,8 @@ export class CrossyScene extends Scene {
     this.add(light);
 
     this.light = light;
-    const timeManager = new TimeManager({light});
-    timeManager.changeLightColorWithTransition();
-
+    this.timeManager = new TimeManager({light});
+    this.timeManager.changeLightColorWithTransition();
     
     // let helper = new CameraHelper(light.shadow.camera);
     // this.add(helper);
