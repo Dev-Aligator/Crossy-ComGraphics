@@ -1,5 +1,5 @@
 import { TweenMax } from 'gsap';
-
+import { realTimeToGameTimeRatio } from './GameSettings';
 export class TimeManager {
     constructor({light}) {
         this.light = light;
@@ -10,7 +10,7 @@ export class TimeManager {
             if (event.key === " " || event.key === "ArrowUp") {
                 this.intervalId = setInterval(() => {
                     this.currentTime += 1;
-                }, 1000);
+                }, realTimeToGameTimeRatio*1000);
 
                 // Remove the event listener once started
                 document.removeEventListener("keydown", keyPressHandler);
