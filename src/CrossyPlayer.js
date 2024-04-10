@@ -1,5 +1,6 @@
 import { Group } from 'three';
 import { utils } from 'expo-three';
+import { TimelineMax } from 'gsap/TweenMax';
 import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
 import ModelLoader from '../src/ModelLoader';
 
