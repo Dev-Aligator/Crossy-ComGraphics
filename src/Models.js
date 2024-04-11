@@ -174,9 +174,17 @@ export default {
       model: require('../assets/models/characters/juwan/juwan.obj'),
       texture: require('../assets/models/characters/juwan/juwan.png'),
     },
-    castle: {
-      model: require('../assets/models/characters/castle/castle.obj'),
-      texture: require('../assets/models/characters/castle/castle.png'),
-    }
-  }
+    cser: {
+      model: require('../assets/models/characters/cser/cser.obj'),
+      texture: require('../assets/models/characters/cser/cser.png'),
+    },
+
+  },
+  items: {
+    bomb: {
+      model: require('../assets/models/items/bomb/bomb.obj'),
+      texture: require('../assets/models/items/bomb/bomb.png'),
+    },
+  },
+
 }

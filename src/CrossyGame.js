@@ -178,6 +178,22 @@ export class GameMap {
 
     return false;
   };
+
+  collectItemDetection = position => {
+    const targetZ = `${position.z | 0}`;
+    if (targetZ in this.floorMap) {
+      const {type, entity} = this.floorMap[targetZ];
+      if (type === 'grass' && entity.itemList[0]) {
+        const key = `${position.x | 0}`;
+        if (key == entity.itemList[0].mesh.position.x) {
+          entity.floor.remove(entity.itemList[0].mesh);
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
 }
 
 export class EntityContainer {

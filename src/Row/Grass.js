@@ -1,8 +1,8 @@
-import { Object3D } from 'three';
-
+import { Box3, Object3D } from 'three';
+import { utils } from 'expo-three';
 import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
-
+import { Power2, TweenMax } from 'gsap';
 export const Fill = {
   empty: 'empty',
   solid: 'solid',
@@ -28,6 +28,12 @@ export default class Grass extends Object3D {
 
 
 */
+  getWidth = mesh => {
+    let box3 = new Box3();
+    box3.setFromObject(mesh);
+    // console.log( box.min, box.max, box.size() );
+    return Math.round(box3.max.z - box3.min.z);
+  };
 
   generate = (type = Fill.random) => {
     this.entities.map(val => {
@@ -37,6 +43,10 @@ export default class Grass extends Object3D {
     this.entities = [];
     this.obstacleMap = {};
     this.treeGen(type);
+
+    this.itemList = [];
+    // this.itemMap = {};
+    this.itemGen()
   };
 
   obstacleMap = {};
@@ -66,7 +76,7 @@ export default class Grass extends Object3D {
         this.addObstacle(_x);
         continue;
       }
-
+      
       if (HAS_WALLS) {
         /// Walls
         if (x >= 9 || x <= -1) {
@@ -85,6 +95,44 @@ export default class Grass extends Object3D {
       }
     }
   };
+
+  itemGen = () => {
+    // this.items.map(val => {
+    //   this.floor.remove(val.mesh);
+    //   val = null;
+    // });
+    // this.items = [];
+
+    if (Math.random() > 0.1) {
+      let itemPosX = Math.floor(Math.random()*15) - 3
+
+      if (itemPosX in this.obstacleMap) {
+        return;
+      }
+
+      let mesh = ModelLoader._item.getRandom();
+      utils.scaleLongestSideToSize(mesh, 0.5);
+      const width = this.getWidth(mesh);
+
+      this.floor.add(mesh);
+      mesh.position.set(itemPosX, groundLevel + 0.05 , 0);
+      
+      TweenMax.to(mesh.rotation, 2, { 
+        y: Math.PI * 2,
+        repeat: -1,
+        repeatDelay: 0,
+        ease: Linear.easeNone
+       });
+
+      //  this.itemMap[`${x | 0}`] = { index: this.entities.length };
+       this.itemList.push({
+        mesh,
+        width,
+       })
+
+    }
+    
+  }
 
   constructor(heroWidth, onCollide) {
     super();

@@ -345,6 +345,10 @@ export default class Engine {
       this._hero.moving = false;
     }
 
+    if (this.gameMap.collectItemDetection(this._hero.targetPosition)) {
+      /// To-do: Add specific function for each colected items
+    }
+
     const targetRow =
       this.gameMap.getRow(this._hero.initialPosition.z + velocity.z) || {};
     let finalY = targetRow.entity.top || groundLevel;

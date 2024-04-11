@@ -27,8 +27,8 @@ export default {
     name: "Juwan",
     id: "juwan"
   },
-  castle: {
-    name: "Castle",
-    id: "castle",
+  cser: {
+    name: "CS-er",
+    id: "cser",
   }
 };
