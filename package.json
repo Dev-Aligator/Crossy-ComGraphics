@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "serve": "npx serve ./web-build",
-    "build:web": "expo build:web",
+    "build:web": "npx expo export:web",
     "start:web": "expo start:web",
     "deploy:web": "netlify deploy --prod --dir web-build"
   },
