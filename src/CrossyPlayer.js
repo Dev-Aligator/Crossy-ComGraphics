@@ -1,10 +1,17 @@
-import { Group } from 'three';
-import { utils } from 'expo-three';
-import { TimelineMax } from 'gsap/TweenMax';
-import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
-import ModelLoader from '../src/ModelLoader';
+import { Group } from "three";
+import { utils } from "expo-three";
+import { TimelineMax } from "gsap/TweenMax";
+import {
+  BASE_ANIMATION_TIME,
+  groundLevel,
+  IDLE_DURING_GAME_PLAY,
+  PLAYER_IDLE_SCALE,
+  startingRow,
+} from "./GameSettings";
+import ModelLoader from "../src/ModelLoader";
+import { Box3, Mesh } from "three";
 
-const normalizeAngle = angle => {
+const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
@@ -66,7 +73,40 @@ class PlayerPositionAnimation extends TimelineMax {
         x: targetPosition.x,
         y: targetPosition.y,
         z: targetPosition.z,
-      },
+      }
+    );
+  }
+}
+
+class ItemPositionAnimation extends TimelineMax {
+  constructor(
+    item,
+    heroHeight,
+    { targetPosition, initialPosition, onComplete }
+  ) {
+    super({
+      onComplete: () => onComplete(),
+    });
+
+    const delta = {
+      x: targetPosition.x - initialPosition.x,
+      z: targetPosition.z - initialPosition.z,
+    };
+
+    const inAirPosition = {
+      x: initialPosition.x + delta.x * 0.75,
+      y: targetPosition.y + heroHeight + 0.75,
+      z: initialPosition.z + delta.z * 0.75,
+    };
+
+    this.to(item.position, BASE_ANIMATION_TIME, { ...inAirPosition }).to(
+      item.position,
+      BASE_ANIMATION_TIME,
+      {
+        x: targetPosition.x,
+        y: targetPosition.y + heroHeight + 0.25,
+        z: targetPosition.z,
+      }
     );
   }
 }
@@ -80,21 +120,38 @@ export default class CrossyPlayer extends Group {
     if (this._character === character) return;
     this._character = character;
     const node = ModelLoader._hero.getNode(character);
-    if (!node) throw new Error(`Failed to get node for character: ${character}`);
+    if (!node)
+      throw new Error(`Failed to get node for character: ${character}`);
     if (this.node) {
       this.remove(this.node);
     }
 
     utils.scaleLongestSideToSize(node, 1);
-    utils.alignMesh(node, { x: 0.5, z: 0.5, y: 1.0})
+    utils.alignMesh(node, { x: 0.5, z: 0.5, y: 1.0 });
     this.node = node;
     this.add(node);
+    this.carriedItem = null;
+    this.height = this.getHeight(node);
+    this.scene_world = null;
   }
 
   constructor(character) {
     super();
     this.setCharacter(character);
     this.reset();
+  }
+
+  dropItem() {
+    if (this.carriedItem) {
+      this.scene_world.remove(this.carriedItem.mesh);
+      this.carriedItem = null;
+    }
+  }
+  getHeight = (mesh) => {
+    let box3 = new Box3();
+    box3.setFromObject(mesh);
+    // console.log( box.min, box.max, box.size() );
+    return Math.round(box3.max.y - box3.min.y);
   }
 
   moveOnEntity() {
@@ -117,9 +174,10 @@ export default class CrossyPlayer extends Group {
     if (this.initialPosition) this.initialPosition.x = target;
   }
 
+
   stopAnimations() {
     this.animations.map(val => {
-      if (val.pause) {
+      if (val && val.pause) {
         val.pause();
       }
       val = null;
@@ -148,7 +206,7 @@ export default class CrossyPlayer extends Group {
     this.position.set(
       this.targetPosition.x,
       this.targetPosition.y,
-      this.targetPosition.z,
+      this.targetPosition.z
     );
     if (this.targetRotation) {
       this.rotation.y = normalizeAngle(this.targetRotation);
@@ -198,13 +256,32 @@ export default class CrossyPlayer extends Group {
     });
   }
 
+  createItemPositionAnimation({ onComplete }) {
+    if (!this.carriedItem) {
+      return;
+    }
+    return new ItemPositionAnimation(this.carriedItem.mesh, this.height, {
+      onComplete: () => {
+        // this.finishedMovingAnimation();
+        onComplete();
+      },
+      targetPosition: this.targetPosition,
+      initialPosition: this.initialPosition,
+    });
+  }
+
   commitMovementAnimations({ onComplete }) {
     const positionChangeAnimation = this.createPositionAnimation({
       onComplete,
     });
 
+    const itemChangeAnimation = this.createItemPositionAnimation({
+      onComplete,
+    });
+
     this.animations = [
       positionChangeAnimation,
+      itemChangeAnimation,
       new PlayerScaleAnimation(this),
       TweenMax.to(this.rotation, BASE_ANIMATION_TIME, {
         y: this.targetRotation,
@@ -243,8 +320,7 @@ export default class CrossyPlayer extends Group {
   }
 
   getRunOverByCar(road, car) {
-
-    this.position.y = (road.top - 0.05);
+    this.position.y = road.top - 0.05;
 
     TweenLite.to(this.scale, 0.2, {
       y: 0.05,

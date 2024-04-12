@@ -1,13 +1,13 @@
-import { Box3, Object3D } from 'three';
-import { utils } from 'expo-three';
-import ModelLoader from '../../src/ModelLoader';
-import { groundLevel } from '../GameSettings';
-import { Power2, TweenMax } from 'gsap';
-import { ExplosionAnimation } from '../Animations';
+import { Box3, Object3D } from "three";
+import { utils } from "expo-three";
+import ModelLoader from "../../src/ModelLoader";
+import { groundLevel } from "../GameSettings";
+import { Power2, TweenMax } from "gsap";
+import { ExplosionAnimation } from "../Animations";
 export const Fill = {
-  empty: 'empty',
-  solid: 'solid',
-  random: 'random',
+  empty: "empty",
+  solid: "solid",
+  random: "random",
 };
 
 const HAS_WALLS = true;
@@ -29,7 +29,7 @@ export default class Grass extends Object3D {
 
 
 */
-  getWidth = mesh => {
+  getWidth = (mesh) => {
     let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
@@ -37,7 +37,7 @@ export default class Grass extends Object3D {
   };
 
   generate = (type = Fill.random) => {
-    this.entities.map(val => {
+    this.entities.map((val) => {
       this.floor.remove(val.mesh);
       val = null;
     });
@@ -47,11 +47,11 @@ export default class Grass extends Object3D {
 
     this.itemList = [];
     // this.itemMap = {};
-    this.itemGen()
+    this.itemGen();
   };
 
   obstacleMap = {};
-  addObstacle = x => {
+  addObstacle = (x) => {
     let mesh;
     if (HAS_VARIETY) {
       mesh =
@@ -67,7 +67,7 @@ export default class Grass extends Object3D {
     mesh.position.set(x, groundLevel, 0);
   };
 
-  treeGen = type => {
+  treeGen = (type) => {
     // 0 - 8
     let _rowCount = 0;
     const count = Math.round(Math.random() * 2) + 1;
@@ -77,7 +77,7 @@ export default class Grass extends Object3D {
         this.addObstacle(_x);
         continue;
       }
-      
+
       if (HAS_WALLS) {
         /// Walls
         if (x >= 9 || x <= -1) {
@@ -105,7 +105,7 @@ export default class Grass extends Object3D {
     // this.items = [];
 
     if (Math.random() > 0.1) {
-      let itemPosX = Math.floor(Math.random()*15) - 3
+      let itemPosX = Math.floor(Math.random() * 15) - 3;
 
       if (itemPosX in this.obstacleMap) {
         return;
@@ -116,39 +116,37 @@ export default class Grass extends Object3D {
       const width = this.getWidth(mesh);
 
       this.floor.add(mesh);
-      mesh.position.set(itemPosX, groundLevel + 0.05 , 0);
-      
-      TweenMax.to(mesh.rotation, 2, { 
+      mesh.position.set(itemPosX, groundLevel + 0.05, 0);
+
+      TweenMax.to(mesh.rotation, 2, {
         y: Math.PI * 2,
         repeat: -1,
         repeatDelay: 0,
-        ease: Linear.easeNone
-       });
+        ease: Linear.easeNone,
+      });
 
       //  this.itemMap[`${x | 0}`] = { index: this.entities.length };
-       this.itemList.push({
+      this.itemList.push({
         mesh,
         width,
-       })
-
+        id: "0",
+      });
     }
-    
-  }
+  };
 
   explosionTrigger = (posX) => {
     let mesh = ModelLoader._effect.getNode();
 
-    utils.scaleLongestSideToSize(mesh,0.5);
+    utils.scaleLongestSideToSize(mesh, 0.5);
     this.floor.add(mesh);
-    mesh.position.set(posX, groundLevel-0.3, 0);
+    mesh.position.set(posX, groundLevel - 0.3, 0);
 
     const onCompleteExplosion = () => {
       this.floor.remove(mesh);
-    }
+    };
 
     let animation = new ExplosionAnimation(mesh, onCompleteExplosion);
-
-  }
+  };
 
   constructor(heroWidth, onCollide) {
     super();

@@ -1,6 +1,9 @@
-import { Box3, Object3D } from 'three';
+import { Box3, Object3D } from "three";
 
-import ModelLoader from '../../src/ModelLoader';
+import ModelLoader from "../../src/ModelLoader";
+import { ExplosionAnimation } from "../Animations";
+import { utils } from "expo-three";
+import { groundLevel } from "../GameSettings";
 
 export default class Road extends Object3D {
   active = false;
@@ -10,13 +13,13 @@ export default class Road extends Object3D {
 
   isFirstLane(isFirst) {
     if (isFirst) {
-      this.road.material = ModelLoader._road.models['1'].children[0].material;
+      this.road.material = ModelLoader._road.models["1"].children[0].material;
     } else {
-      this.road.material = ModelLoader._road.models['0'].children[0].material;
+      this.road.material = ModelLoader._road.models["0"].children[0].material;
     }
   }
 
-  getWidth = mesh => {
+  getWidth = (mesh) => {
     let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
@@ -24,7 +27,7 @@ export default class Road extends Object3D {
   };
 
   carGen = () => {
-    this.cars.map(val => {
+    this.cars.map((val) => {
       this.road.remove(val.mesh);
       val = null;
     });
@@ -52,6 +55,7 @@ export default class Road extends Object3D {
           dir: xDir,
           width,
           collisionBox: this.heroWidth / 2 + width / 2 - 0.1,
+          isDestroyed: false,
         });
 
         this.road.add(mesh);
@@ -59,7 +63,7 @@ export default class Road extends Object3D {
 
       this.cars[x].mesh.position.set(xPos, 0.25, 0);
       this.cars[x].speed = speed * xDir;
-      this.cars[x].mesh.rotation.y = Math.PI / 2 * xDir;
+      this.cars[x].mesh.rotation.y = (Math.PI / 2) * xDir;
 
       xPos -= (Math.random() * 3 + 5) * xDir;
     }
@@ -71,7 +75,7 @@ export default class Road extends Object3D {
     this.onCollide = onCollide;
     const { _road } = ModelLoader;
 
-    this.road = _road.models['1'].children[0].clone();
+    this.road = _road.models["1"].children[0].clone();
     this.add(this.road);
 
     this.carGen();
@@ -81,7 +85,7 @@ export default class Road extends Object3D {
     if (!this.active) {
       return;
     }
-    this.cars.map(car => this.drive({ dt, player, car }));
+    this.cars.map((car) => this.drive({ dt, player, car }));
   };
 
   drive = ({ dt, player, car }) => {
@@ -105,6 +109,20 @@ export default class Road extends Object3D {
     }
   };
 
+  explosionTrigger = (posX) => {
+    let mesh = ModelLoader._effect.getNode();
+
+    utils.scaleLongestSideToSize(mesh, 0.5);
+    this.road.add(mesh);
+    mesh.position.set(posX, groundLevel - 0.3, 0);
+
+    const onCompleteExplosion = () => {
+      this.road.remove(mesh);
+    };
+
+    let animation = new ExplosionAnimation(mesh, onCompleteExplosion);
+  };
+
   shouldCheckCollision = ({ player, car }) => {
     if (Math.round(player.position.z) == this.position.z && player.isAlive) {
       const { mesh, collisionBox } = car;
@@ -113,8 +131,15 @@ export default class Road extends Object3D {
         player.position.x < mesh.position.x + collisionBox &&
         player.position.x > mesh.position.x - collisionBox
       ) {
-        player.collideWithCar(this, car);
-        this.onCollide(car, 'feathers', 'car');
+        if (player.carriedItem && player.carriedItem.id == "0") {
+          player.dropItem();
+          this.road.remove(mesh);
+          this.explosionTrigger(mesh.position.x);
+          car.isDestroyed = true;
+        } else if (!car.isDestroyed) {
+          player.collideWithCar(this, car);
+          this.onCollide(car, "feathers", "car");
+        }
       }
     }
   };

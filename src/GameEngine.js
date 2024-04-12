@@ -1,5 +1,4 @@
 import { Dimensions } from "react-native";
-
 import { swipeDirections } from "../components/GestureView";
 import AudioManager from "../src/AudioManager";
 import ModelLoader from "../src/ModelLoader";
@@ -19,6 +18,7 @@ import {
   sceneColor,
   startingRow,
 } from "./GameSettings";
+import { detectUsedItem } from "./Row/Road";
 
 const initialState = {
   id: Characters.bacon.id,
@@ -64,6 +64,7 @@ export default class Engine {
 
     // Mesh
     this._hero = new CrossyPlayer(character);
+    this._hero.scene_world = this.scene.world;
 
     this.scene.world.add(this._hero);
 
@@ -121,7 +122,7 @@ export default class Engine {
       Math.max(
         -2,
         this.scene.world.position.x +
-          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
+        (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
       )
     );
 
@@ -334,6 +335,19 @@ export default class Engine {
         break;
     }
 
+    const updateCarriedItemPosition = () => {
+      if (!this._hero.carriedItem) {
+        return;
+      }
+      this._hero.carriedItem.mesh.position.set(
+        this._hero.targetPosition.x,
+        this._hero.height + 0.5,
+        this._hero.targetPosition.z
+      );
+    };
+
+    // updateCarriedItemPosition();
+
     // Check collision using the computed movement.
     if (this.gameMap.treeCollision(this._hero.targetPosition)) {
       // If we collide with an object, then reset the target position so the character just jumps up.
@@ -345,8 +359,9 @@ export default class Engine {
       this._hero.moving = false;
     }
 
-    if (this.gameMap.collectItemDetection(this._hero.targetPosition)) {
-      /// To-do: Add specific function for each colected items
+    if (this.gameMap.collectItemDetection(this._hero)) {
+      this.scene.world.add(this._hero.carriedItem.mesh);
+      updateCarriedItemPosition();
     }
 
     const targetRow =
