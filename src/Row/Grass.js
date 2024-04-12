@@ -1,7 +1,7 @@
 import { Box3, Object3D } from "three";
 import { utils } from "expo-three";
 import ModelLoader from "../../src/ModelLoader";
-import { groundLevel } from "../GameSettings";
+import { groundLevel, itemGenerationRate } from "../GameSettings";
 import { Power2, TweenMax } from "gsap";
 import { ExplosionAnimation } from "../Animations";
 export const Fill = {
@@ -104,7 +104,7 @@ export default class Grass extends Object3D {
     // });
     // this.items = [];
 
-    if (Math.random() > 0.1) {
+    if (Math.random() <= itemGenerationRate) {
       let itemPosX = Math.floor(Math.random() * 15) - 3;
 
       if (itemPosX in this.obstacleMap) {

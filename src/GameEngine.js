@@ -3,6 +3,7 @@ import { swipeDirections } from "../components/GestureView";
 import AudioManager from "../src/AudioManager";
 import ModelLoader from "../src/ModelLoader";
 import Characters from "./Characters";
+import { utils } from "expo-three";
 import {
   CrossyCamera,
   CrossyGameMap,
@@ -140,6 +141,7 @@ export default class Engine {
     this._hero.stopAnimations();
     this.onGameEnded();
     this.scene.timeManager.stopTimeOnGameOver();
+    this._hero.dropItem();
     // this.gameState = State.Game.gameOver;
 
     // this.props.setGameState(this.gameState);
@@ -339,11 +341,13 @@ export default class Engine {
       if (!this._hero.carriedItem) {
         return;
       }
+      utils.alignMesh(this._hero.carriedItem.mesh, { x: 0.5, z: 0.5, y: 1.0 });
       this._hero.carriedItem.mesh.position.set(
         this._hero.targetPosition.x,
         this._hero.height + 0.5,
         this._hero.targetPosition.z
       );
+
     };
 
     // updateCarriedItemPosition();

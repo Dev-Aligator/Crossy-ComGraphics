@@ -132,6 +132,7 @@ export default class CrossyPlayer extends Group {
     this.add(node);
     this.carriedItem = null;
     this.height = this.getHeight(node);
+    this.width = this.getWidth(node)
   }
 
   constructor(character) {
@@ -154,6 +155,13 @@ export default class CrossyPlayer extends Group {
     return Math.round(box3.max.y - box3.min.y);
   }
 
+  getWidth = (mesh) => {
+    let box3 = new Box3();
+    box3.setFromObject(mesh);
+    // console.log( box.min, box.max, box.size() );
+    return Math.round(box3.max.x - box3.min.x);
+  }
+
   moveOnEntity() {
     if (!this.ridingOn) {
       return;
@@ -162,6 +170,10 @@ export default class CrossyPlayer extends Group {
     // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
     this.position.x += this.ridingOn.speed;
     this.initialPosition.x = this.position.x;
+
+    if (this.carriedItem) {
+      this.carriedItem.mesh.position.x += this.ridingOn.speed;
+    }
   }
 
   moveOnCar() {
