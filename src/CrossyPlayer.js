@@ -132,13 +132,13 @@ export default class CrossyPlayer extends Group {
     this.add(node);
     this.carriedItem = null;
     this.height = this.getHeight(node);
-    this.scene_world = null;
   }
 
   constructor(character) {
     super();
     this.setCharacter(character);
     this.reset();
+    this.scene_world = null;
   }
 
   dropItem() {
