@@ -7,14 +7,16 @@
   "scripts": {
     "serve": "npx serve ./web-build",
     "build:web": "npx expo export:web",
-    "start:web": "expo start:web",
+    "start:web": "npx expo start --web",
     "deploy:web": "netlify deploy --prod --dir web-build"
   },
   "dependencies": {
+    "@expo/dev-server": "^0.1.124",
+    "@expo/webpack-config": "^19.0.1",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-picker/picker": "^2.3.0",
     "@tweenjs/tween.js": "^17.2.0",
-    "expo": "^46.0.13",
+    "expo": "~47.0.13",
     "expo-app-loading": "~1.3.0",
     "expo-asset": "~8.4.6",
     "expo-av": "~10.2.0",
