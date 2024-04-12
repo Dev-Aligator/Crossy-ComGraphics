@@ -187,4 +187,11 @@ export default {
     },
   },
 
+  effects: {
+    explosion: {
+      model: require('../assets/models/effects/explosion/explosion.obj'),
+      texture: require('../assets/models/effects/explosion/explosion.png'),
+    }
+  }
+
 }

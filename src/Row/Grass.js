@@ -3,6 +3,7 @@ import { utils } from 'expo-three';
 import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
 import { Power2, TweenMax } from 'gsap';
+import { ExplosionAnimation } from '../Animations';
 export const Fill = {
   empty: 'empty',
   solid: 'solid',
@@ -132,6 +133,21 @@ export default class Grass extends Object3D {
 
     }
     
+  }
+
+  explosionTrigger = (posX) => {
+    let mesh = ModelLoader._effect.getNode();
+
+    utils.scaleLongestSideToSize(mesh,0.5);
+    this.floor.add(mesh);
+    mesh.position.set(posX, groundLevel-0.3, 0);
+
+    const onCompleteExplosion = () => {
+      this.floor.remove(mesh);
+    }
+
+    let animation = new ExplosionAnimation(mesh, onCompleteExplosion);
+
   }
 
   constructor(heroWidth, onCollide) {

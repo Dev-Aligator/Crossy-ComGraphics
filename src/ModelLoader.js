@@ -11,6 +11,7 @@ import RailRoad from "./Node/RailRoad";
 import TrainLight from "./Node/TrainLight";
 import LilyPad from "./Node/LilyPad";
 import Item from "./Node/Item";
+import Effect from "./Node/Effect";
 class ModelLoader {
   loadModels = async () => {
     this._lilyPad = new LilyPad();
@@ -26,6 +27,7 @@ class ModelLoader {
     this._log = new Log();
     this._hero = new Hero();
     this._item = new Item();
+    this._effect = new Effect();
 
     // try {
     await Promise.all([
@@ -42,6 +44,7 @@ class ModelLoader {
       this._hero.setup(),
       this._trainLight.setup(),
       this._item.setup(),
+      this._effect.setup(),
     ]);
     console.log("Done Loading 3D Models!");
     // } catch (error) {

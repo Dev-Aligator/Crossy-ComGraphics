@@ -187,6 +187,8 @@ export class GameMap {
         const key = `${position.x | 0}`;
         if (key == entity.itemList[0].mesh.position.x) {
           entity.floor.remove(entity.itemList[0].mesh);
+          entity.itemList.pop();
+          entity.explosionTrigger(position.x);
           return true;
         }
       }
