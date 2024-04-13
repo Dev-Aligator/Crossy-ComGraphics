@@ -10,106 +10,11 @@ import {
 } from "./GameSettings";
 import ModelLoader from "../src/ModelLoader";
 import { Box3, Mesh } from "three";
-
+import { PlayerScaleAnimation, PlayerIdleAnimation, PlayerPositionAnimation, ItemPositionAnimation } from "./Animations";
 const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
-class PlayerScaleAnimation extends TimelineMax {
-  constructor(player) {
-    super();
-
-    this.to(player.scale, BASE_ANIMATION_TIME, {
-      x: 1,
-      y: 1.2,
-      z: 1,
-    })
-      .to(player.scale, BASE_ANIMATION_TIME, {
-        x: 1.0,
-        y: 0.8,
-        z: 1,
-      })
-      .to(player.scale, BASE_ANIMATION_TIME, {
-        x: 1,
-        y: 1,
-        z: 1,
-        ease: Bounce.easeOut,
-      });
-  }
-}
-
-class PlayerIdleAnimation extends TimelineMax {
-  constructor(player) {
-    super({ repeat: -1 });
-
-    this.to(player.scale, 0.3, {
-      y: PLAYER_IDLE_SCALE,
-      ease: Power1.easeIn,
-    }).to(player.scale, 0.3, { y: 1, ease: Power1.easeOut });
-  }
-}
-
-class PlayerPositionAnimation extends TimelineMax {
-  constructor(player, { targetPosition, initialPosition, onComplete }) {
-    super({
-      onComplete: () => onComplete(),
-    });
-
-    const delta = {
-      x: targetPosition.x - initialPosition.x,
-      z: targetPosition.z - initialPosition.z,
-    };
-
-    const inAirPosition = {
-      x: initialPosition.x + delta.x * 0.75,
-      y: targetPosition.y + 0.5,
-      z: initialPosition.z + delta.z * 0.75,
-    };
-
-    this.to(player.position, BASE_ANIMATION_TIME, { ...inAirPosition }).to(
-      player.position,
-      BASE_ANIMATION_TIME,
-      {
-        x: targetPosition.x,
-        y: targetPosition.y,
-        z: targetPosition.z,
-      }
-    );
-  }
-}
-
-class ItemPositionAnimation extends TimelineMax {
-  constructor(
-    item,
-    heroHeight,
-    { targetPosition, initialPosition, onComplete }
-  ) {
-    super({
-      onComplete: () => onComplete(),
-    });
-
-    const delta = {
-      x: targetPosition.x - initialPosition.x,
-      z: targetPosition.z - initialPosition.z,
-    };
-
-    const inAirPosition = {
-      x: initialPosition.x + delta.x * 0.75,
-      y: targetPosition.y + heroHeight + 0.75,
-      z: initialPosition.z + delta.z * 0.75,
-    };
-
-    this.to(item.position, BASE_ANIMATION_TIME, { ...inAirPosition }).to(
-      item.position,
-      BASE_ANIMATION_TIME,
-      {
-        x: targetPosition.x,
-        y: targetPosition.y + heroHeight + 0.25,
-        z: targetPosition.z,
-      }
-    );
-  }
-}
 
 export default class CrossyPlayer extends Group {
   animations = [];

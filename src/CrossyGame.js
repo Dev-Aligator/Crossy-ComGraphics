@@ -18,6 +18,7 @@ import { Fill } from "./Row/Grass";
 import { TimeManager } from "./TimeManager";
 import { utils } from "expo-three";
 import ModelLoader from "./ModelLoader";
+import { ItemPickupAnimation } from "./Animations";
 
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
@@ -200,23 +201,42 @@ export class GameMap {
     return { id: itemId, mesh: mesh };
   };
 
+
+
+
+  dropItemTimeout = null; // Variable to store the timeout ID
+
   collectItemDetection = (player) => {
     const targetZ = `${player.targetPosition.z | 0}`;
     if (targetZ in this.floorMap) {
       const { type, entity } = this.floorMap[targetZ];
       if (type === "grass" && entity.itemList[0]) {
         const key = `${player.targetPosition.x | 0}`;
-        if (key == entity.itemList[0].mesh.position.x) {
+        const itemMesh = entity.itemList[0].mesh
+        if (key == itemMesh.position.x) {
+          // Clear the old timeout if it exists
+          if (this.dropItemTimeout) {
+            clearTimeout(this.dropItemTimeout);
+          }
+
           player.dropItem();
+          new ItemPickupAnimation(itemMesh, player, () => { })
           player.carriedItem = this.getItem(entity.itemList[0].id);
-          entity.floor.remove(entity.itemList[0].mesh);
+          entity.floor.remove(itemMesh);
+
+          // Drop certain items if you hold them for too long
+          this.dropItemTimeout = setTimeout(() => {
+            player.dropItem(); // Drop the item after the timeout
+            // Additional actions you want to perform after the timeout
+          }, entity.itemList[0].timeOut);
+
           entity.itemList.pop();
+
+
           return true;
         }
       }
     }
-
-    return false;
   };
 }
 

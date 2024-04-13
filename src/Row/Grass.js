@@ -115,7 +115,6 @@ export default class Grass extends Object3D {
 
       const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
-      console.log(randomItem);
       let mesh = ModelLoader._item.getNode(randomItem.id);
       utils.scaleLongestSideToSize(mesh, randomItem.scale);
       utils.alignMesh(mesh, { x: 0.25, z: 0.25, y: 0.5 });
@@ -127,7 +126,8 @@ export default class Grass extends Object3D {
       this.itemList.push({
         mesh,
         width,
-        id: "0",
+        id: randomItem.id,
+        timeOut: randomItem.timeOut,
       });
     }
   };
