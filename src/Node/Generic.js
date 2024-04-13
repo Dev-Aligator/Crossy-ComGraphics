@@ -81,5 +81,5 @@ export default class Generic {
     return await this._downloadAssets(props);
   };
 
-  setup = async () => {};
+  setup = async () => { };
 }

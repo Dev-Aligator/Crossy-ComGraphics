@@ -4,6 +4,7 @@ import ModelLoader from "../../src/ModelLoader";
 import { groundLevel, itemGenerationRate } from "../GameSettings";
 import { Power2, TweenMax } from "gsap";
 import { ExplosionAnimation } from "../Animations";
+import ItemList from "../Items";
 export const Fill = {
   empty: "empty",
   solid: "solid",
@@ -17,6 +18,7 @@ const HAS_VARIETY = true;
 export default class Grass extends Object3D {
   active = false;
   entities = [];
+  itemNames = Object.keys(ItemList);
 
   top = 0.4;
   /*
@@ -111,21 +113,17 @@ export default class Grass extends Object3D {
         return;
       }
 
-      let mesh = ModelLoader._item.getRandom();
-      utils.scaleLongestSideToSize(mesh, 0.5);
+      const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
+      const randomItem = ItemList[this.itemNames[randomItemIndex]];
+      console.log(randomItem);
+      let mesh = ModelLoader._item.getNode(randomItem.id);
+      utils.scaleLongestSideToSize(mesh, randomItem.scale);
+      utils.alignMesh(mesh, { x: 0.25, z: 0.25, y: 0.5 });
       const width = this.getWidth(mesh);
 
       this.floor.add(mesh);
-      mesh.position.set(itemPosX, groundLevel + 0.05, 0);
-
-      TweenMax.to(mesh.rotation, 2, {
-        y: Math.PI * 2,
-        repeat: -1,
-        repeatDelay: 0,
-        ease: Linear.easeNone,
-      });
-
-      //  this.itemMap[`${x | 0}`] = { index: this.entities.length };
+      mesh.position.set(itemPosX, groundLevel, 0);
+      mesh.rotation.y = randomItem.rotateY;
       this.itemList.push({
         mesh,
         width,
