@@ -5,10 +5,10 @@ import GameContext from "./GameContext";
 
 // import AsyncStorage from '@react-native-community/async-storage';
 
-const STORAGE_KEY = "@BouncyBacon:Character";
+const STORAGE_KEY = "@CrossyRoad:Character";
 const SHOULD_REHYDRATE = true;
 
-const defaultState = { character: "bacon", highscore: 0 };
+const defaultState = { character: "cser", highscore: 0 };
 
 async function cacheAsync(value) {
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
@@ -37,7 +37,7 @@ export default function GameProvider({ children }) {
         const { character, highscore } = await rehydrateAsync();
         setCharacter(character);
         setHighscore(highscore);
-      } catch (ignored) {}
+      } catch (ignored) { }
       //   setLoaded(true);
     };
 
