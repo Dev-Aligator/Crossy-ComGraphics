@@ -188,9 +188,9 @@ export class GameMap {
     return false;
   };
 
-  getItem = (itemId) => {
-    let mesh = ModelLoader._item.getNode(itemId);
-    utils.scaleLongestSideToSize(mesh, 0.25);
+  getItem = (itemObj) => {
+    let mesh = ModelLoader._item.getNode(itemObj.id);
+    utils.scaleLongestSideToSize(mesh, itemObj.scalePlayer);
     TweenMax.to(mesh.rotation, 1, {
       y: Math.PI * 2,
       repeat: -1,
@@ -198,7 +198,7 @@ export class GameMap {
       ease: Linear.easeNone,
     });
     // const width = this.getWidth(mesh);
-    return { id: itemId, mesh: mesh };
+    return { id: itemObj.id, mesh: mesh };
   };
 
 
@@ -221,7 +221,7 @@ export class GameMap {
 
           player.dropItem();
           new ItemPickupAnimation(itemMesh, player, () => { })
-          player.carriedItem = this.getItem(entity.itemList[0].id);
+          player.carriedItem = this.getItem(entity.itemList[0]);
           entity.floor.remove(itemMesh);
 
           // Drop certain items if you hold them for too long

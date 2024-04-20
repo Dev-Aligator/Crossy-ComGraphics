@@ -118,7 +118,7 @@ export default class Grass extends Object3D {
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
       let mesh = ModelLoader._item.getNode(randomItem.id);
 
-      utils.scaleLongestSideToSize(mesh, randomItem.scale);
+      utils.scaleLongestSideToSize(mesh, randomItem.scaleGround);
       utils.alignMesh(mesh, { x: 0.25, z: 0.25, y: 0.5 });
       const width = this.getWidth(mesh);
 
@@ -130,6 +130,7 @@ export default class Grass extends Object3D {
         width,
         id: randomItem.id,
         timeOut: randomItem.timeOut,
+        scalePlayer: randomItem.scalePlayer,
       });
 
       const tl = new TimelineMax();
