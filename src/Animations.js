@@ -20,6 +20,8 @@ export class ExplosionAnimation extends TimelineMax {
                 y: 0.1,
                 z: 0.01,
             })
+      
+        return this;
     }
 }
 

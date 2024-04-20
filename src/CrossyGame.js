@@ -221,6 +221,7 @@ export class GameMap {
 
           player.dropItem();
           new ItemPickupAnimation(itemMesh, player, () => { })
+
           player.carriedItem = this.getItem(entity.itemList[0]);
           entity.floor.remove(itemMesh);
 

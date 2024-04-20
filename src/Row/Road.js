@@ -4,12 +4,14 @@ import ModelLoader from "../../src/ModelLoader";
 import { ExplosionAnimation } from "../Animations";
 import { utils } from "expo-three";
 import { groundLevel } from "../GameSettings";
+import { TweenMax } from 'gsap';
 
 export default class Road extends Object3D {
   active = false;
   cars = [];
 
   top = 0.3;
+  explosionBox = 3;
 
   isFirstLane(isFirst) {
     if (isFirst) {
@@ -105,6 +107,7 @@ export default class Road extends Object3D {
         player.hitBy = null;
       }
     } else {
+      this.shouldCheckExplosion({player, car });
       this.shouldCheckCollision({ player, car });
     }
   };
@@ -120,8 +123,41 @@ export default class Road extends Object3D {
       this.road.remove(mesh);
     };
 
-    let animation = new ExplosionAnimation(mesh, onCompleteExplosion);
+    new ExplosionAnimation(mesh, onCompleteExplosion);
   };
+
+  shouldCheckExplosion = ({player, car }) => {
+    if (player.isAlive && player.carriedItem && player.carriedItem.id == "0") {
+      const {mesh, explosionBox} = car;
+
+      if (
+        player.position.x < mesh.position.x + 1 &&
+          player.position.x > mesh.position.x - 1 &&
+          Math.abs(player.position.z - this.position.z ) <= 1
+      ) {
+        const travelDistance = Math.abs(player.position.x - mesh.position.x) + Math.abs(player.position.z - this.position.z);
+        const carPos = [mesh.position.x, mesh.position.y, this.position.z]
+        console.log(travelDistance);
+        TweenMax.to(player.carriedItem.mesh.position, travelDistance / 2, {
+          x: carPos[0],
+          y: carPos[1],
+          z: carPos[2],
+          onComplete: () => {
+            console.log("yes");
+            player.dropItem();
+            this.road.remove(mesh);
+            this.explosionTrigger(mesh.position.x);
+            car.isDestroyed = true;
+
+
+
+          }
+        })
+
+      }
+
+    }
+  }
 
   shouldCheckCollision = ({ player, car }) => {
     if (Math.round(player.position.z) == this.position.z && player.isAlive) {
@@ -129,14 +165,15 @@ export default class Road extends Object3D {
 
       if (
         player.position.x < mesh.position.x + collisionBox &&
-        player.position.x > mesh.position.x - collisionBox
+          player.position.x > mesh.position.x - collisionBox
       ) {
-        if (player.carriedItem && player.carriedItem.id == "0") {
-          player.dropItem();
-          this.road.remove(mesh);
-          this.explosionTrigger(mesh.position.x);
-          car.isDestroyed = true;
-        } else if (!car.isDestroyed) {
+        // if (player.carriedItem && player.carriedItem.id == "0") {
+        //   player.dropItem();
+        //   this.road.remove(mesh);
+        //   this.explosionTrigger(mesh.position.x);
+        //   car.isDestroyed = true;
+        // }
+        if (!car.isDestroyed) {
           player.collideWithCar(this, car);
           this.onCollide(car, "feathers", "car");
         }
