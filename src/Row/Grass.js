@@ -131,6 +131,7 @@ export default class Grass extends Object3D {
         id: randomItem.id,
         timeOut: randomItem.timeOut,
         scalePlayer: randomItem.scalePlayer,
+        activeTime: randomItem.activeTime,
       });
 
       const tl = new TimelineMax();

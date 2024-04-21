@@ -7,5 +7,6 @@ export default {
         scaleGround: 0.35,
         scalePlayer: 0.25,
         timeOut: 5000,
+        activeTime: 100,
     },
 };

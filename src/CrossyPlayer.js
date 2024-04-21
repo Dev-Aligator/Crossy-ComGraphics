@@ -36,6 +36,7 @@ export default class CrossyPlayer extends Group {
     this.node = node;
     this.add(node);
     this.carriedItem = null;
+    this.itemIsActive = false;
     this.height = this.getHeight(node);
     this.width = this.getWidth(node)
   }
@@ -51,6 +52,7 @@ export default class CrossyPlayer extends Group {
     if (this.carriedItem) {
       this.scene_world.remove(this.carriedItem.mesh);
       this.carriedItem = null;
+      this.itemIsActive = false;
     }
   }
   getHeight = (mesh) => {

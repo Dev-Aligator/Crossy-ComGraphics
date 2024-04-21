@@ -134,8 +134,7 @@ export default class Road extends Object3D {
   };
 
   shouldCheckExplosion = ({player, car }) => {
-    if (player.isAlive && !car.isTargeted && player.carriedItem && player.carriedItem.id == "0") {
-
+    if (player.isAlive && !car.isTargeted && player.carriedItem && player.itemIsActive && player.carriedItem.id == "0") {
       if (
         Math.abs(player.position.x - car.mesh.position.x) < 3 &&
           Math.abs(player.position.z - this.position.z ) <= 1

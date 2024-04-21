@@ -205,6 +205,7 @@ export class GameMap {
 
 
   dropItemTimeout = null; // Variable to store the timeout ID
+  activeItemTimeout = null;
 
   collectItemDetection = (player) => {
     const targetZ = `${player.targetPosition.z | 0}`;
@@ -219,10 +220,19 @@ export class GameMap {
             clearTimeout(this.dropItemTimeout);
           }
 
+          if (this.activeItemTimeout) {
+            clearTimeout(this.activeItemTimeout);
+          }
+
           player.dropItem();
           new ItemPickupAnimation(itemMesh, player, () => { })
 
           player.carriedItem = this.getItem(entity.itemList[0]);
+
+          this.activeItemTimeout = setTimeout(() => {
+            player.itemIsActive = true;
+          }, entity.itemList[0].activeTime)
+
           entity.floor.remove(itemMesh);
 
           // Drop certain items if you hold them for too long
