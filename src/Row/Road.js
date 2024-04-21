@@ -91,6 +91,16 @@ export default class Road extends Object3D {
     this.cars.map((car) => this.drive({ dt, player, car }));
   };
 
+  removeCar = (car) => {
+    const carIndex = this.cars.indexOf(car);
+    if (carIndex > -1){
+      this.cars.splice(this.cars.indexOf(car), 1)
+    }
+    if (this.cars.length == 0 && this.active) {
+      this.carGen();
+    }
+  }
+
   drive = ({ dt, player, car }) => {
     const { hitBy } = player;
     const offset = 11;
@@ -114,8 +124,7 @@ export default class Road extends Object3D {
   };
 
   explosionTrigger = (posX, mesh) => {
-    this.road.add(mesh);
-    mesh.position.set(posX, groundLevel - 0.3, 0);
+    mesh.visible = true;
 
     const onCompleteExplosion = () => {
       this.road.remove(mesh);
@@ -134,6 +143,9 @@ export default class Road extends Object3D {
         car.isTargeted = true;
         let explosionMesh = ModelLoader._effect.getNode("0");
         utils.scaleLongestSideToSize(explosionMesh, 0.5);
+        explosionMesh.visible = false;
+        this.road.add(explosionMesh);
+        explosionMesh.position.set(car.mesh.position.x, groundLevel - 0.3, 0);
         TweenMax.to(player.carriedItem.mesh.position, 0.5, {
           x: car.mesh.position.x,
           y: car.mesh.position.y,
@@ -143,6 +155,7 @@ export default class Road extends Object3D {
             this.road.remove(car.mesh);
             this.explosionTrigger(car.mesh.position.x, explosionMesh);
             car.isDestroyed = true;
+            this.removeCar(car);
           }
         })
 
@@ -157,18 +170,11 @@ export default class Road extends Object3D {
 
       if (
         player.position.x < mesh.position.x + collisionBox &&
-          player.position.x > mesh.position.x - collisionBox
+          player.position.x > mesh.position.x - collisionBox &&
+          !car.isDestroyed
       ) {
-        // if (player.carriedItem && player.carriedItem.id == "0") {
-        //   player.dropItem();
-        //   this.road.remove(mesh);
-        //   this.explosionTrigger(mesh.position.x);
-        //   car.isDestroyed = true;
-        // }
-        if (!car.isDestroyed) {
-          player.collideWithCar(this, car);
-          this.onCollide(car, "feathers", "car");
-        }
+        player.collideWithCar(this, car);
+        this.onCollide(car, "feathers", "car");
       }
     }
   };
