@@ -57,6 +57,7 @@ export default class Road extends Object3D {
           dir: xDir,
           width,
           collisionBox: this.heroWidth / 2 + width / 2 - 0.1,
+          isTargeted: false, 
           isDestroyed: false,
         });
 
@@ -112,10 +113,7 @@ export default class Road extends Object3D {
     }
   };
 
-  explosionTrigger = (posX) => {
-    let mesh = ModelLoader._effect.getNode();
-
-    utils.scaleLongestSideToSize(mesh, 0.5);
+  explosionTrigger = (posX, mesh) => {
     this.road.add(mesh);
     mesh.position.set(posX, groundLevel - 0.3, 0);
 
@@ -127,30 +125,24 @@ export default class Road extends Object3D {
   };
 
   shouldCheckExplosion = ({player, car }) => {
-    if (player.isAlive && player.carriedItem && player.carriedItem.id == "0") {
-      const {mesh, explosionBox} = car;
+    if (player.isAlive && !car.isTargeted && player.carriedItem && player.carriedItem.id == "0") {
 
       if (
-        player.position.x < mesh.position.x + 1 &&
-          player.position.x > mesh.position.x - 1 &&
+        Math.abs(player.position.x - car.mesh.position.x) < 3 &&
           Math.abs(player.position.z - this.position.z ) <= 1
       ) {
-        const travelDistance = Math.abs(player.position.x - mesh.position.x) + Math.abs(player.position.z - this.position.z);
-        const carPos = [mesh.position.x, mesh.position.y, this.position.z]
-        console.log(travelDistance);
-        TweenMax.to(player.carriedItem.mesh.position, travelDistance / 2, {
-          x: carPos[0],
-          y: carPos[1],
-          z: carPos[2],
+        car.isTargeted = true;
+        let explosionMesh = ModelLoader._effect.getNode("0");
+        utils.scaleLongestSideToSize(explosionMesh, 0.5);
+        TweenMax.to(player.carriedItem.mesh.position, 0.5, {
+          x: car.mesh.position.x,
+          y: car.mesh.position.y,
+          z: this.position.z,
           onComplete: () => {
-            console.log("yes");
             player.dropItem();
-            this.road.remove(mesh);
-            this.explosionTrigger(mesh.position.x);
+            this.road.remove(car.mesh);
+            this.explosionTrigger(car.mesh.position.x, explosionMesh);
             car.isDestroyed = true;
-
-
-
           }
         })
 
