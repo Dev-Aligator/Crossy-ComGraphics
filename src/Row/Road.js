@@ -9,7 +9,7 @@ import { TweenMax } from 'gsap';
 export default class Road extends Object3D {
   active = false;
   cars = [];
-
+  secondCount = 0;
   top = 0.3;
   explosionBox = 3;
 
@@ -118,7 +118,10 @@ export default class Road extends Object3D {
         player.hitBy = null;
       }
     } else {
-      this.shouldCheckExplosion({player, car });
+      this.secondCount += 1;
+      if (this.secondCount % 50 == 0 && Math.abs(player.position.z - this.position.z) <= 1) {
+        this.shouldCheckExplosion({player, car });
+      }
       this.shouldCheckCollision({ player, car });
     }
   };
@@ -136,17 +139,18 @@ export default class Road extends Object3D {
   shouldCheckExplosion = ({player, car }) => {
     if (player.isAlive && !car.isTargeted && player.carriedItem && player.itemIsActive && player.carriedItem.id == "0") {
       if (
-        Math.abs(player.position.x - car.mesh.position.x) < 3 &&
-          Math.abs(player.position.z - this.position.z ) <= 1
+        Math.abs(player.position.x - car.mesh.position.x) < 3
       ) {
         car.isTargeted = true;
         let explosionMesh = ModelLoader._effect.getNode("0");
         utils.scaleLongestSideToSize(explosionMesh, 0.5);
         explosionMesh.visible = false;
         this.road.add(explosionMesh);
-        explosionMesh.position.set(car.mesh.position.x, groundLevel - 0.3, 0);
+
+        const explosionPositionX = car.mesh.position.x + (0.5*car.speed / 0.016);
+        explosionMesh.position.set(explosionPositionX, groundLevel - 0.3, 0);
         TweenMax.to(player.carriedItem.mesh.position, 0.5, {
-          x: car.mesh.position.x,
+          x: explosionPositionX,
           y: car.mesh.position.y,
           z: this.position.z,
           onComplete: () => {

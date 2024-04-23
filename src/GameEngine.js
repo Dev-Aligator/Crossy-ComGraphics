@@ -149,7 +149,6 @@ export default class Engine {
 
   tick = (dt) => {
     // this.drive();
-
     this.gameMap.tick(dt, this._hero);
 
     if (!this._hero.moving) {
