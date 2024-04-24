@@ -13,6 +13,7 @@ import AudioManager from "../src/AudioManager";
 import { MAP_OFFSET, maxRows } from "./GameSettings";
 import Feathers from "./Particles/Feathers";
 import Water from "./Particles/Water";
+import Blood from "./Particles/Blood";
 import Rows from "./Row";
 import { Fill } from "./Row/Grass";
 import { TimeManager } from "./TimeManager";
@@ -81,6 +82,9 @@ export class CrossyScene extends Scene {
       } else if (type === "feathers") {
         this.featherParticles.mesh.position.copy(model.position);
         this.featherParticles.run(type, direction);
+      } else if (type == "blood") {
+        this.bloodParticles.mesh.position.copy(model.position);
+        this.bloodParticles.run(type, direction);
       }
     });
   };
@@ -93,6 +97,9 @@ export class CrossyScene extends Scene {
 
     this.featherParticles = new Feathers();
     this.world.add(this.featherParticles.mesh);
+
+    this.bloodParticles = new Blood();
+    this.world.add(this.bloodParticles.mesh);
   };
 
   rumble = () => {
@@ -141,6 +148,9 @@ export class CrossyWorld extends Group {
 
     this.featherParticles = new Feathers();
     this.add(this.featherParticles.mesh);
+
+    this.bloodParticles = new Blood();
+    this.add(this.bloodParticles.mesh);
   };
 }
 

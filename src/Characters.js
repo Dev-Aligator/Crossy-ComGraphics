@@ -30,5 +30,6 @@ export default {
   cser: {
     name: "CS-er",
     id: "cser",
+    deathParticle: "blood",
   }
 };

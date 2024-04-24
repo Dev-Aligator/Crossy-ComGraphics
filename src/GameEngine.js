@@ -76,12 +76,16 @@ export default class Engine {
     return !this._hero.isAlive || this._isGameStateEnded();
   }
 
-  onCollide = async (obstacle = {}, type = "feathers", collision) => {
+  onCollide = async (obstacle = {}, type = "", collision) => {
     if (this.isGameEnded()) {
       return;
     }
     this._hero.isAlive = false;
     this._hero.stopIdle();
+    if (type != "water") {
+      type = Characters[this._hero._character].deathParticle ? Characters[this._hero._character].deathParticle : "feathers";
+
+    }
     if (collision === "car") {
       AudioManager.playCarHitSound();
       AudioManager.playDeathSound();
@@ -92,6 +96,7 @@ export default class Engine {
     this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
     this.gameOver();
+    console.log(collision);
   };
 
   // Setup initial scene
