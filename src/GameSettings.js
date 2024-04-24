@@ -11,4 +11,5 @@ export const PI_2 = Math.PI * 0.5;
 export const PLAYER_IDLE_SCALE = 0.8;
 export const DEBUG_CAMERA_CONTROLS = false;
 export const realTimeToGameTimeRatio = 2;
-export const itemGenerationRate = 0.5
+export const itemGenerationRate = 0.5;
+export const MUTED = true;

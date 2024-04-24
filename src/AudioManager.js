@@ -1,9 +1,9 @@
 import { Audio } from "expo-av";
 import AudioFiles from "./Audio";
+import { MUTED } from "./GameSettings";
 import { Platform } from "react-native";
 
 // Web just can't seem to handle audio
-const MUTED = true;
 
 class AudioManager {
   sounds = AudioFiles;
@@ -11,7 +11,9 @@ class AudioManager {
   audioFileMoveIndex = 0;
 
   playMoveSound = async () => {
-    console.log("move sound");
+    if (MUTED) {
+      return;
+    }
     await this.playAsync(
       this.sounds.chicken.move[`${this.audioFileMoveIndex}`]
     );
@@ -21,6 +23,9 @@ class AudioManager {
   };
 
   playPassiveCarSound = async () => {
+    if (MUTED ) {
+      return;
+    }
     if (Math.floor(Math.random() * 2) === 0) {
       await this.playAsync(this.sounds.car.passive[`1`]);
     }
@@ -53,6 +58,9 @@ class AudioManager {
   };
 
   createIdleSoundAsync = async (resourceId) => {
+    if (MUTED) {
+      return;
+    }
     if (!this._soundCache[resourceId]) {
       this._soundCache[resourceId] = [];
     }

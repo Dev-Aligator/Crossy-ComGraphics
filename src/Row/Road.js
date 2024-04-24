@@ -9,7 +9,6 @@ import { TweenMax } from 'gsap';
 export default class Road extends Object3D {
   active = false;
   cars = [];
-  secondCount = 0;
   top = 0.3;
   explosionBox = 3;
 
@@ -118,8 +117,7 @@ export default class Road extends Object3D {
         player.hitBy = null;
       }
     } else {
-      this.secondCount += 1;
-      if (this.secondCount % 50 == 0 && Math.abs(player.position.z - this.position.z) <= 1) {
+      if (Math.abs(player.position.z - this.position.z) <= 1) {
         this.shouldCheckExplosion({player, car });
       }
       this.shouldCheckCollision({ player, car });
