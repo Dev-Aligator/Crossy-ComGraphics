@@ -14,13 +14,14 @@ import { MAP_OFFSET, maxRows } from "./GameSettings";
 import Feathers from "./Particles/Feathers";
 import Water from "./Particles/Water";
 import Blood from "./Particles/Blood";
+import Smoke from "./Particles/Smoke";
+import Fire from "./Particles/Fire";
 import Rows from "./Row";
 import { Fill } from "./Row/Grass";
 import { TimeManager } from "./TimeManager";
 import { utils } from "expo-three";
 import ModelLoader from "./ModelLoader";
 import { ItemPickupAnimation } from "./Animations";
-
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
 const useShadows = true;
@@ -75,6 +76,9 @@ export class CrossyScene extends Scene {
   useParticle = (model, type, direction = 0) => {
     if (!useParticles) return;
     requestAnimationFrame(async () => {
+      this.fireParticles.mesh.position.copy(model.position);
+      this.fireParticles.run(type, direction);
+      return;
       if (type === "water") {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
@@ -89,7 +93,7 @@ export class CrossyScene extends Scene {
     });
   };
 
-  createParticles = () => {
+  createParticles = (camera) => {
     if (!useParticles) return;
 
     this.waterParticles = new Water();
@@ -100,6 +104,12 @@ export class CrossyScene extends Scene {
 
     this.bloodParticles = new Blood();
     this.world.add(this.bloodParticles.mesh);
+
+    // this.smokeParticles = new Smoke();
+    // this.world.add(this.smokeParticles.mesh);
+    //
+    this.fireParticles = new Fire();
+    this.world.add(this.fireParticles.mesh);
   };
 
   rumble = () => {
@@ -151,6 +161,12 @@ export class CrossyWorld extends Group {
 
     this.bloodParticles = new Blood();
     this.add(this.bloodParticles.mesh);
+
+    // this.smokeParticles = new Smoke();
+    // this.add(this.smokeParticles.mesh);
+
+    this.fireParticles = new Fire();
+    this.add(this.fireParticles.mesh);
   };
 }
 

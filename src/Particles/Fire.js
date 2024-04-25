@@ -1,9 +1,9 @@
 import { TweenMax } from "gsap";
 import { BoxGeometry, Group, Mesh, LinearFilter, MeshPhongMaterial, MeshBasicMaterial, PlaneGeometry, TextureLoader, CustomBlending, AddEquation, OneFactor, OneMinusSrcAlphaFactor } from "three";
-import textureImage from "../../assets/particles/smoke.png"; 
-export default class Smoke {
+import textureImage from "../../assets/particles/fire.png"; 
+export default class Fire {
   constructor() {
-    const textureLoader = new TextureLoader();
+        const textureLoader = new TextureLoader();
 
     const texture = textureLoader.load(textureImage);
     texture.generateMipmaps = false;
@@ -17,13 +17,14 @@ export default class Smoke {
       opacity: 0.95,
       depthWrite: false,
       // color: 0x71d7ff,
-      blending: CustomBlending,
-      blendEquation: AddEquation,
-      blendSrc: OneFactor,
-      blendDst: OneMinusSrcAlphaFactor,
-      blendSrcAlpha: OneFactor,
-      blendDstAlpha: OneMinusSrcAlphaFactor,
+    blending: CustomBlending,
+    blendEquation: AddEquation,
+    blendSrc: OneFactor,
+    blendDst: OneMinusSrcAlphaFactor,
+    blendSrcAlpha: OneFactor,
+    blendDstAlpha: OneMinusSrcAlphaFactor,
     });
+    // this.fireMat.wireframe = false;
     this.mesh = new Group();
     const size = 1;
     this.parts = [];
