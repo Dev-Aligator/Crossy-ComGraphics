@@ -144,6 +144,10 @@ export default {
       model: require('../assets/models/vehicles/taxi/0.obj'),
       texture: require('../assets/models/vehicles/taxi/0.png'),
     },
+    bus_uit: {
+      model: require('../assets/models/vehicles/uit_bus/uit-bus.obj'),
+      texture: require('../assets/models/vehicles/uit_bus/uit-bus.png'),
+    },
   },
   characters: {
     brent: {

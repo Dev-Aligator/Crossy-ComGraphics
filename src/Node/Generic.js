@@ -4,6 +4,7 @@ import { Box3, Mesh } from "three";
 
 import Models from "../../src/Models";
 import CrossyMaterial from "../CrossyMaterial";
+import { utils } from "expo-three";
 
 function setShadows(mesh, { castShadow, receiveShadow }) {
   mesh.traverse((child) => {
@@ -38,14 +39,17 @@ export default class Generic {
     texture,
     castShadow,
     receiveShadow,
+    scale=null,
   }) => {
     const material = CrossyMaterial.load(texture);
 
     const _model = await loadObjAsync({ asset: model });
-
     _model.traverse((child) => {
       if (child instanceof Mesh) {
         child.material = material;
+        if( scale ) {
+          utils.scaleLongestSideToSize(child, scale);
+        }
       }
     });
 

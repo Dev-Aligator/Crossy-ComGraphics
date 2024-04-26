@@ -5,7 +5,6 @@ import { groundLevel, itemGenerationRate } from "../GameSettings";
 import { Power2, TweenMax } from "gsap";
 import { ExplosionAnimation } from "../Animations";
 import ItemList from "../Items";
-import CrossyMaterial from "../CrossyMaterial";
 export const Fill = {
   empty: "empty",
   solid: "solid",
@@ -117,7 +116,6 @@ export default class Grass extends Object3D {
       const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
       let mesh = ModelLoader._item.getNode(randomItem.id);
-
       utils.scaleLongestSideToSize(mesh, randomItem.scaleGround);
       utils.alignMesh(mesh, { x: 0.25, z: 0.25, y: 0.5 });
       const width = this.getWidth(mesh);

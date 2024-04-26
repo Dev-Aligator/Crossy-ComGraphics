@@ -48,7 +48,8 @@ export default class Road extends Object3D {
 
     for (let x = 0; x < numCars; x++) {
       if (this.cars.length - 1 < x) {
-        let mesh = ModelLoader._car.getRandom();
+        // let mesh = ModelLoader._car.getRandom();
+        let mesh = ModelLoader._car.getNode("8");
         const width = this.getWidth(mesh);
 
         this.cars.push({
