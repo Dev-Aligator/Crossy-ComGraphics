@@ -78,6 +78,8 @@ export class CrossyScene extends Scene {
     requestAnimationFrame(async () => {
       this.fireParticles.mesh.position.copy(model.position);
       this.fireParticles.run(type, direction);
+      this.smokeParticles.mesh.position.copy(model.position);
+      this.smokeParticles.run(type, direction);
       return;
       if (type === "water") {
         this.waterParticles.mesh.position.copy(model.position);
@@ -105,9 +107,8 @@ export class CrossyScene extends Scene {
     this.bloodParticles = new Blood();
     this.world.add(this.bloodParticles.mesh);
 
-    // this.smokeParticles = new Smoke();
-    // this.world.add(this.smokeParticles.mesh);
-    //
+    this.smokeParticles = new Smoke();
+    this.world.add(this.smokeParticles.mesh);
     this.fireParticles = new Fire();
     this.world.add(this.fireParticles.mesh);
   };
