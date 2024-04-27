@@ -75,6 +75,7 @@ export class CrossyScene extends Scene {
 
   useParticle = (model, type, direction = 0, onComplete=null) => {
     if (!useParticles) return;
+
     requestAnimationFrame(async () => {
       if (type === "water") {
         this.waterParticles.mesh.position.copy(model.position);

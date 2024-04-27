@@ -15,9 +15,9 @@ export default class Fire {
     this.fireMat = new MeshBasicMaterial({
       map: texture,
       transparent: true,
-      opacity: 0.95,
+      // opacity: 0.95,
       depthWrite: false,
-      // color: 0x71d7ff,
+      color: 0xff8080,
       blending: CustomBlending,
       blendEquation: AddEquation,
       blendSrc: OneFactor,
