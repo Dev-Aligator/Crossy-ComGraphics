@@ -73,7 +73,7 @@ export class CrossyScene extends Scene {
     this.waterParticles.mesh.position.y = 0;
   };
 
-  useParticle = (model, type, direction = 0, onComplete=null) => {
+  useParticle = (model, type, direction = 0, onComplete=null, car=null) => {
     if (!useParticles) return;
 
     requestAnimationFrame(async () => {
@@ -90,8 +90,8 @@ export class CrossyScene extends Scene {
       } else if (type == "explosion") {
         this.smokeParticles.mesh.position.copy(model);
         this.fireParticles.mesh.position.copy(model);
-        this.smokeParticles.run(type, direction, onComplete);
-        this.fireParticles.run(type, direction);
+        this.smokeParticles.run(type, direction, onComplete, car);
+        this.fireParticles.run(car);
       }
     });
   };

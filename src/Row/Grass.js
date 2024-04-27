@@ -1,7 +1,7 @@
 import { Box3, Object3D } from "three";
 import { utils } from "expo-three";
 import ModelLoader from "../../src/ModelLoader";
-import { groundLevel, itemGenerationRate } from "../GameSettings";
+import { groundLevel, itemGenerationRate, DISABLE_ITEMS } from "../GameSettings";
 import { Power2, TweenMax } from "gsap";
 import ItemList from "../Items";
 export const Fill = {
@@ -47,8 +47,10 @@ export default class Grass extends Object3D {
     this.treeGen(type);
 
     this.itemList = [];
-    // this.itemMap = {};
-    this.itemGen();
+
+    if (!DISABLE_ITEMS){
+      this.itemGen();
+    }
   };
 
   obstacleMap = {};
@@ -99,12 +101,6 @@ export default class Grass extends Object3D {
   };
 
   itemGen = () => {
-    // this.items.map(val => {
-    //   this.floor.remove(val.mesh);
-    //   val = null;
-    // });
-    // this.items = [];
-
     if (Math.random() <= itemGenerationRate) {
       let itemPosX = Math.floor(Math.random() * 15) - 3;
 

@@ -137,7 +137,7 @@ export default class Road extends Object3D {
       z: this.position.z,
     }
     new CarSkaingAnimation(car);
-    player.scene.useParticle(explosionPosition, "explosion", 0 , onCompleteExplosion);
+    player.scene.useParticle(explosionPosition, "explosion", 0 , onCompleteExplosion, car);
   };
 
   shouldCheckExplosion = ({player, car }) => {

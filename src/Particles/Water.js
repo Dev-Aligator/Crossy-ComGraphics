@@ -9,11 +9,11 @@ export default class Water {
       flatShading: true,
     });
     this.mesh = new Group();
-    const size = 0.2;
+    const size = 0.1;
     const bigParticleGeom = new BoxGeometry(size, size + 0.1, size, 1);
     // var smallParticleGeom = new BoxGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 30; i++) {
       let partPink = new Mesh(bigParticleGeom, this.waterMat);
       // var partGreen = new Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);

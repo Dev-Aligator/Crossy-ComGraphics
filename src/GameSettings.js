@@ -14,3 +14,4 @@ export const realTimeToGameTimeRatio = 2;
 export const itemGenerationRate = 0.5;
 export const MUTED = true;
 export const explosionDuration = 1.5;
+export const DISABLE_ITEMS = true;
