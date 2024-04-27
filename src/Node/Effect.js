@@ -1,7 +1,7 @@
 import Generic from "./Generic";
 
 const effectList = [
-    'explosion',
+    // 'explosion',
 ]
 
 export default class Effect extends Generic {

@@ -66,6 +66,7 @@ export default class Engine {
     // Mesh
     this._hero = new CrossyPlayer(character);
     this._hero.scene_world = this.scene.world;
+    this._hero.scene = this.scene;
 
     this.scene.world.add(this._hero);
 
@@ -96,7 +97,6 @@ export default class Engine {
     this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
     this.gameOver();
-    console.log(collision);
   };
 
   // Setup initial scene

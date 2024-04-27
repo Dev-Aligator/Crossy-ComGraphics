@@ -73,14 +73,9 @@ export class CrossyScene extends Scene {
     this.waterParticles.mesh.position.y = 0;
   };
 
-  useParticle = (model, type, direction = 0) => {
+  useParticle = (model, type, direction = 0, onComplete=null) => {
     if (!useParticles) return;
     requestAnimationFrame(async () => {
-      this.fireParticles.mesh.position.copy(model.position);
-      this.fireParticles.run(type, direction);
-      this.smokeParticles.mesh.position.copy(model.position);
-      this.smokeParticles.run(type, direction);
-      return;
       if (type === "water") {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
@@ -91,6 +86,11 @@ export class CrossyScene extends Scene {
       } else if (type == "blood") {
         this.bloodParticles.mesh.position.copy(model.position);
         this.bloodParticles.run(type, direction);
+      } else if (type == "explosion") {
+        this.smokeParticles.mesh.position.copy(model);
+        this.fireParticles.mesh.position.copy(model);
+        this.smokeParticles.run(type, direction, onComplete);
+        this.fireParticles.run(type, direction);
       }
     });
   };

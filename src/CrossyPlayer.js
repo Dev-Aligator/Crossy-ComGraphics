@@ -46,6 +46,7 @@ export default class CrossyPlayer extends Group {
     this.setCharacter(character);
     this.reset();
     this.scene_world = null;
+    this.scene = null;
   }
 
   dropItem() {

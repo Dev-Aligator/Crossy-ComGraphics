@@ -1,10 +1,10 @@
 import { Box3, Object3D } from "three";
 
 import ModelLoader from "../../src/ModelLoader";
-import { ExplosionAnimation } from "../Animations";
 import { utils } from "expo-three";
 import { groundLevel } from "../GameSettings";
 import { TweenMax } from 'gsap';
+import { CarSkaingAnimation } from "../Animations";
 
 export default class Road extends Object3D {
   active = false;
@@ -49,7 +49,8 @@ export default class Road extends Object3D {
     for (let x = 0; x < numCars; x++) {
       if (this.cars.length - 1 < x) {
         // let mesh = ModelLoader._car.getRandom();
-        let mesh = ModelLoader._car.getNode("8");
+        // let mesh = ModelLoader._car.getNode("8");
+        let mesh = Math.random() > 0.5 ? ModelLoader._car.getNode("8") : ModelLoader._car.getRandom();
         const width = this.getWidth(mesh);
 
         this.cars.push({
@@ -125,14 +126,18 @@ export default class Road extends Object3D {
     }
   };
 
-  explosionTrigger = (posX, mesh) => {
-    mesh.visible = true;
+  explosionTrigger = (car, player, predictedPosX) => {
 
     const onCompleteExplosion = () => {
-      this.road.remove(mesh);
+      this.road.remove(car);
     };
-
-    new ExplosionAnimation(mesh, onCompleteExplosion);
+    let explosionPosition = {
+      x: predictedPosX,
+      y: car.position.y,
+      z: this.position.z,
+    }
+    new CarSkaingAnimation(car);
+    player.scene.useParticle(explosionPosition, "explosion", 0 , onCompleteExplosion);
   };
 
   shouldCheckExplosion = ({player, car }) => {
@@ -141,21 +146,14 @@ export default class Road extends Object3D {
         Math.abs(player.position.x - car.mesh.position.x) < 3
       ) {
         car.isTargeted = true;
-        let explosionMesh = ModelLoader._effect.getNode("0");
-        utils.scaleLongestSideToSize(explosionMesh, 0.5);
-        explosionMesh.visible = false;
-        this.road.add(explosionMesh);
-
         const explosionPositionX = car.mesh.position.x + (0.5*car.speed / 0.016);
-        explosionMesh.position.set(explosionPositionX, groundLevel - 0.3, 0);
         TweenMax.to(player.carriedItem.mesh.position, 0.5, {
           x: explosionPositionX,
           y: car.mesh.position.y,
           z: this.position.z,
           onComplete: () => {
             player.dropItem();
-            this.road.remove(car.mesh);
-            this.explosionTrigger(car.mesh.position.x, explosionMesh);
+            this.explosionTrigger(car.mesh, player, explosionPositionX);
             car.isDestroyed = true;
             this.removeCar(car);
           }

@@ -4,27 +4,18 @@ import {
     PLAYER_IDLE_SCALE,
 } from "./GameSettings";
 
-export class ExplosionAnimation extends TimelineMax {
-    constructor(explosion, onCompleteExplosion) {
-        super({
-            onComplete: () => onCompleteExplosion(),
-        });
+export class CarSkaingAnimation extends TimelineMax {
+  constructor(carMesh) {
+    super();
 
-        this.to(explosion.scale, 0.5, {
-            x: 0.15,
-            y: 0.15,
-            z: 0.1,
-        })
-            .to(explosion.scale, 0.3, {
-                x: 0.01,
-                y: 0.1,
-                z: 0.01,
-            })
+    this.to(carMesh.rotation, BASE_ANIMATION_TIME, {
+      x: 0.2,
+      yoyo: true,
+      repeat: -1,
       
-        return this;
-    }
+    })
+  }
 }
-
 export class ItemPickupAnimation extends TimelineMax {
     constructor(mesh, hero, onComplete) {
         super({

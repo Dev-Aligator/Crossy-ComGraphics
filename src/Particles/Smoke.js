@@ -36,9 +36,9 @@ export default class Smoke {
     }
   }
 
-  run = (type, direction) => {
+  run = (type, direction, onComplete) => {
     let explosionSpeed = 0.3;
-
+    
     for (let i = 0; i < this.parts.length; i++) {
       // let m = direction < 0 ? -1 : 1;
 
@@ -66,7 +66,6 @@ export default class Smoke {
 
       TweenMax.to(p.position, s * 5, {
         bezier,
-        // ease: Bounce.easeOut,
         repeat: -1,
       });
 
@@ -76,7 +75,7 @@ export default class Smoke {
         y: scaleTo,
         z: scaleTo,
         onComplete: () => {
-          TweenMax.to(p.scale, s, {
+          TweenMax.to(p.scale, 1, {
             x: 0,
             y: 0,
             z: 0,
@@ -86,6 +85,8 @@ export default class Smoke {
 
       });
     }
+
+    setTimeout(onComplete, (explosionDuration - 0.3)*1000);
   };
 
 }
