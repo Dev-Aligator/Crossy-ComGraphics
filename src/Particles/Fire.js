@@ -1,8 +1,21 @@
 import { TweenMax } from "gsap";
-import { BoxGeometry, Group, Mesh, LinearFilter, MeshPhongMaterial, MeshBasicMaterial, PlaneGeometry, TextureLoader, CustomBlending, AddEquation, OneFactor, OneMinusSrcAlphaFactor } from "three";
-import textureImage from "../../assets/particles/fire.png"; 
+import {
+  BoxGeometry,
+  Group,
+  Mesh,
+  LinearFilter,
+  MeshPhongMaterial,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  TextureLoader,
+  CustomBlending,
+  AddEquation,
+  OneFactor,
+  OneMinusSrcAlphaFactor,
+} from "three";
+import textureImage from "../../assets/particles/fire_dark.png";
 import { explosionDuration } from "../GameSettings";
-import { GetLength } from "../utils/ThreeUtils";
+import { GetHeight, GetLength, GetWidth } from "../utils/ThreeUtils";
 export default class Fire {
   constructor() {
     const textureLoader = new TextureLoader();
@@ -18,7 +31,6 @@ export default class Fire {
       transparent: true,
       // opacity: 0.95,
       depthWrite: false,
-      color: 0xff8080,
       blending: CustomBlending,
       blendEquation: AddEquation,
       blendSrc: OneFactor,
@@ -28,10 +40,10 @@ export default class Fire {
     });
     // this.fireMat.wireframe = false;
     this.mesh = new Group();
-    const size = 2;
+    const size = 0.7;
     this.parts = [];
-    let particleGeom = new BoxGeometry(size,size,0.0001, 1);
-    for (let i = 0; i < 50; i++) {
+    let particleGeom = new BoxGeometry(size, size, 0.0001, 1);
+    for (let i = 0; i < 20; i++) {
       let partPink = new Mesh(particleGeom, this.fireMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
@@ -40,50 +52,47 @@ export default class Fire {
 
   run = (car) => {
     let explosionSpeed = 0.3;
-    const carWidth = GetLength(car);
     for (let i = 0; i < this.parts.length; i++) {
       // let m = direction < 0 ? -1 : 1;
-      let sx = carWidth * 0.5 * (Math.random() * 4 - 2);
-      let sy = carWidth * 0.5 * (Math.random() * 1 + 1);
-      let sz = carWidth * 0.5 * (Math.random() * 2 - 1);
+
+      let tx = Math.random() * 1 - 0.5;
+      let ty = Math.random() * 0.5 + 0.5;
+      let tz = Math.random() * 0.4 - 0.2;
+
       let p = this.parts[i];
 
-      let px = Math.random()*0.2 + 0.2
-      let py = Math.random()*1 + 1
-      let pz = Math.random()*0.1 + 0.1
+      const bezier = {
+        type: "cubic",
+        values: [
+          { x: 0, y: 0, z: 0 },
+          { x: tx * 0.25, y: ty * 0.25, z: tz * 0.25 },
+          { x: tx * 0.5, y: ty * 0.5, z: tz * 0.5 },
 
-      // Randomize initial rotation
-      let rx = Math.random() * Math.PI * 2; // Random rotation around x-axis
-      let ry = Math.random() * Math.PI * 2; // Random rotation around y-axis
-      let rz = Math.random() * Math.PI * 2; // Random rotation around z-axis
-      // p.rotation.set(rx, ry, rz);
+          { x: tx, y: ty, z: tz },
+        ],
+        curviness: 3,
+      };
 
-      p.position.set(px, py, pz);
-      p.scale.set(sx, sy, sz);
+      p.position.set(0, 0, 0);
+      p.scale.set(1, 1, 1);
       p.visible = true;
-      let s = explosionSpeed + Math.random() * 0.5;
 
-      // Randomize direction of explosion
-      let dx = Math.random() * 0.2 - 0.1; // Range from -1 to 1
-      let dy = Math.random() * 2 - 1; // Range from -1 to 1
-      let dz = Math.random() * 0.2 - 0.1; // Range from -1 to 1
-
-      // Tween animation for position with delay based on index
-      TweenMax.to(p.position, s, {
-        x: p.position.x + dx, // Adjust multiplier as needed for explosion spread
-        y: p.position.y + dy, // Adjust multiplier as needed for explosion spread
-        z: p.position.z + dz, // Adjust multiplier as needed for explosion spread
-        ease: Power2.easeOut,
-        delay: 0.05, // Delay based on index, adjust as needed
+      TweenMax.to(p.position, explosionSpeed * 3, {
+        bezier,
       });
 
-      // Tween animation for scale with delay based on index
-      TweenMax.to(p.scale, s * 0.5, {
-        x: 0,
-        y: 0,
-        z: 0,
-        ease: Power2.easeIn,
-        delay: explosionDuration, // Delay based on index, adjust as needed
+      const scaleTo = GetLength(car.mesh);
+      TweenMax.to(p.scale, explosionSpeed, {
+        x: scaleTo,
+        y: scaleTo,
+        z: scaleTo,
+        onComplete: () => {
+          TweenMax.to(p.scale, 2, {
+            x: 0,
+            y: 0,
+            z: 0,
+          });
+        },
       });
     }
   };

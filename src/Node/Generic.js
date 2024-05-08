@@ -39,7 +39,7 @@ export default class Generic {
     texture,
     castShadow,
     receiveShadow,
-    scale=null,
+    scale = null,
   }) => {
     const material = CrossyMaterial.load(texture);
 
@@ -47,7 +47,7 @@ export default class Generic {
     _model.traverse((child) => {
       if (child instanceof Mesh) {
         child.material = material;
-        if( scale ) {
+        if (scale) {
           utils.scaleLongestSideToSize(child, scale);
         }
       }
@@ -61,6 +61,11 @@ export default class Generic {
     let keys = Object.keys(this.models);
     const key = keys[(keys.length * Math.random()) << 0];
     return this.models[key].clone();
+  };
+
+  getRandomKey = () => {
+    let keys = Object.keys(this.models);
+    return keys[(keys.length * Math.random()) << 0];
   };
 
   getNode(key = "0") {
@@ -85,5 +90,5 @@ export default class Generic {
     return await this._downloadAssets(props);
   };
 
-  setup = async () => { };
+  setup = async () => {};
 }

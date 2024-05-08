@@ -22,6 +22,7 @@ import { TimeManager } from "./TimeManager";
 import { utils } from "expo-three";
 import ModelLoader from "./ModelLoader";
 import { ItemPickupAnimation } from "./Animations";
+import CarPiece from "./Particles/CarPieces";
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
 const useShadows = true;
@@ -73,7 +74,7 @@ export class CrossyScene extends Scene {
     this.waterParticles.mesh.position.y = 0;
   };
 
-  useParticle = (model, type, direction = 0, onComplete=null, car=null) => {
+  useParticle = (model, type, direction = 0, onComplete = null, car = null) => {
     if (!useParticles) return;
 
     requestAnimationFrame(async () => {
@@ -90,8 +91,10 @@ export class CrossyScene extends Scene {
       } else if (type == "explosion") {
         this.smokeParticles.mesh.position.copy(model);
         this.fireParticles.mesh.position.copy(model);
-        this.smokeParticles.run(type, direction, onComplete, car);
+        this.smokeParticles.run(car, onComplete);
         this.fireParticles.run(car);
+        this.carParicles.mesh.position.copy(model);
+        this.carParicles.run(car);
       }
     });
   };
@@ -112,6 +115,9 @@ export class CrossyScene extends Scene {
     this.world.add(this.smokeParticles.mesh);
     this.fireParticles = new Fire();
     this.world.add(this.fireParticles.mesh);
+
+    this.carParicles = new CarPiece();
+    this.world.add(this.carParicles.mesh);
   };
 
   rumble = () => {
@@ -229,9 +235,6 @@ export class GameMap {
     return { id: itemObj.id, mesh: mesh };
   };
 
-
-
-
   dropItemTimeout = null; // Variable to store the timeout ID
   activeItemTimeout = null;
 
@@ -241,7 +244,7 @@ export class GameMap {
       const { type, entity } = this.floorMap[targetZ];
       if (type === "grass" && entity.itemList[0]) {
         const key = `${player.targetPosition.x | 0}`;
-        const itemMesh = entity.itemList[0].mesh
+        const itemMesh = entity.itemList[0].mesh;
         if (key == itemMesh.position.x) {
           // Clear the old timeout if it exists
           if (this.dropItemTimeout) {
@@ -253,13 +256,13 @@ export class GameMap {
           }
 
           player.dropItem();
-          new ItemPickupAnimation(itemMesh, player, () => { })
+          new ItemPickupAnimation(itemMesh, player, () => {});
 
           player.carriedItem = this.getItem(entity.itemList[0]);
 
           this.activeItemTimeout = setTimeout(() => {
             player.itemIsActive = true;
-          }, entity.itemList[0].activeTime)
+          }, entity.itemList[0].activeTime);
 
           entity.floor.remove(itemMesh);
 
@@ -270,7 +273,6 @@ export class GameMap {
           }, entity.itemList[0].timeOut);
 
           entity.itemList.pop();
-
 
           return true;
         }

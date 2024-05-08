@@ -1,7 +1,22 @@
 import { TweenMax } from "gsap";
-import { BoxGeometry, SphereGeometry, Group, Mesh, LinearFilter, MeshPhongMaterial, MeshBasicMaterial, PlaneGeometry, TextureLoader, CustomBlending, AddEquation, OneFactor, OneMinusSrcAlphaFactor } from "three";
-import textureImage from "../../assets/particles/smoke.png"; 
+import {
+  BoxGeometry,
+  SphereGeometry,
+  Group,
+  Mesh,
+  LinearFilter,
+  MeshPhongMaterial,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  TextureLoader,
+  CustomBlending,
+  AddEquation,
+  OneFactor,
+  OneMinusSrcAlphaFactor,
+} from "three";
+import textureImage from "../../assets/particles/smoke_dark.png";
 import { explosionDuration } from "../GameSettings";
+import { GetLength } from "../utils/ThreeUtils";
 export default class Smoke {
   constructor() {
     const textureLoader = new TextureLoader();
@@ -26,9 +41,9 @@ export default class Smoke {
       // blendDstAlpha: OneMinusSrcAlphaFactor,
     });
     this.mesh = new Group();
-    const size = 0.7;
+    const size = 1;
     this.parts = [];
-    let particleGeom = new BoxGeometry(size,size,0.001, 1);
+    let particleGeom = new BoxGeometry(size, size, 0.001, 1);
     for (let i = 0; i < 20; i++) {
       let partPink = new Mesh(particleGeom, this.fireMat);
       this.parts.push(partPink);
@@ -36,15 +51,14 @@ export default class Smoke {
     }
   }
 
-  run = (type, direction, onComplete) => {
+  run = (car, onComplete) => {
     let explosionSpeed = 0.3;
-    
+
     for (let i = 0; i < this.parts.length; i++) {
       // let m = direction < 0 ? -1 : 1;
-
-      let tx = (Math.random() * 1 - 0.5);
+      let tx = Math.random() * 1 - 0.5;
       let ty = Math.random() * 0.5 + 0.5;
-      let tz = 0;
+      let tz = Math.random() * 0.4 - 0.2;
       let p = this.parts[i];
 
       const bezier = {
@@ -62,31 +76,26 @@ export default class Smoke {
       p.position.set(0, 0, 0);
       p.scale.set(1, 1, 1);
       p.visible = true;
-      let s = explosionSpeed + Math.random() * 0.5;
 
-      TweenMax.to(p.position, s * 5, {
+      TweenMax.to(p.position, explosionSpeed * 3, {
         bezier,
-        repeat: -1,
       });
 
-      const scaleTo = 2;
-      TweenMax.to(p.scale, s, {
+      const scaleTo = GetLength(car.mesh);
+      TweenMax.to(p.scale, explosionSpeed, {
         x: scaleTo,
         y: scaleTo,
         z: scaleTo,
         onComplete: () => {
-          TweenMax.to(p.scale, 1, {
+          TweenMax.to(p.scale, 2, {
             x: 0,
             y: 0,
             z: 0,
-          })
+          });
         },
-        delay: explosionDuration - 0.3,
-
       });
     }
 
-    setTimeout(onComplete, (explosionDuration - 0.3)*1000);
+    setTimeout(onComplete, (explosionDuration - 0.1) * 1000);
   };
-
 }

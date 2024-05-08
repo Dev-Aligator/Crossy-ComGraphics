@@ -3,7 +3,7 @@ import { Box3, Object3D } from "three";
 import ModelLoader from "../../src/ModelLoader";
 import { utils } from "expo-three";
 import { groundLevel } from "../GameSettings";
-import { TweenMax } from 'gsap';
+import { TweenMax } from "gsap";
 import { CarSkaingAnimation } from "../Animations";
 
 export default class Road extends Object3D {
@@ -50,15 +50,19 @@ export default class Road extends Object3D {
       if (this.cars.length - 1 < x) {
         // let mesh = ModelLoader._car.getRandom();
         // let mesh = ModelLoader._car.getNode("8");
-        let mesh = Math.random() > 0.5 ? ModelLoader._car.getNode("8") : ModelLoader._car.getRandom();
+
+        let carTypeId =
+          Math.random() > 0.5 ? "8" : ModelLoader._car.getRandomKey();
+        let mesh = ModelLoader._car.getNode(carTypeId);
         const width = this.getWidth(mesh);
 
         this.cars.push({
           mesh,
+          carTypeId: carTypeId,
           dir: xDir,
           width,
           collisionBox: this.heroWidth / 2 + width / 2 - 0.1,
-          isTargeted: false, 
+          isTargeted: false,
           isDestroyed: false,
         });
 
@@ -94,13 +98,13 @@ export default class Road extends Object3D {
 
   removeCar = (car) => {
     const carIndex = this.cars.indexOf(car);
-    if (carIndex > -1){
-      this.cars.splice(this.cars.indexOf(car), 1)
+    if (carIndex > -1) {
+      this.cars.splice(this.cars.indexOf(car), 1);
     }
     if (this.cars.length == 0 && this.active) {
       this.carGen();
     }
-  }
+  };
 
   drive = ({ dt, player, car }) => {
     const { hitBy } = player;
@@ -120,49 +124,57 @@ export default class Road extends Object3D {
       }
     } else {
       if (Math.abs(player.position.z - this.position.z) <= 1) {
-        this.shouldCheckExplosion({player, car });
+        this.shouldCheckExplosion({ player, car });
       }
       this.shouldCheckCollision({ player, car });
     }
   };
 
   explosionTrigger = (car, player, predictedPosX) => {
-
     const onCompleteExplosion = () => {
-      this.road.remove(car);
+      this.road.remove(car.mesh);
     };
     let explosionPosition = {
       x: predictedPosX,
-      y: car.position.y,
+      y: car.mesh.position.y,
       z: this.position.z,
-    }
-    new CarSkaingAnimation(car);
-    player.scene.useParticle(explosionPosition, "explosion", 0 , onCompleteExplosion, car);
+    };
+    new CarSkaingAnimation(car.mesh);
+    player.scene.useParticle(
+      explosionPosition,
+      "explosion",
+      0,
+      onCompleteExplosion,
+      car
+    );
   };
 
-  shouldCheckExplosion = ({player, car }) => {
-    if (player.isAlive && !car.isTargeted && player.carriedItem && player.itemIsActive && player.carriedItem.id == "0") {
-      if (
-        Math.abs(player.position.x - car.mesh.position.x) < 3
-      ) {
+  shouldCheckExplosion = ({ player, car }) => {
+    if (
+      player.isAlive &&
+      !car.isTargeted &&
+      player.carriedItem &&
+      player.itemIsActive &&
+      player.carriedItem.id == "0"
+    ) {
+      if (Math.abs(player.position.x - car.mesh.position.x) < 3) {
         car.isTargeted = true;
-        const explosionPositionX = car.mesh.position.x + (0.5*car.speed / 0.016);
+        const explosionPositionX =
+          car.mesh.position.x + (0.5 * car.speed) / 0.016;
         TweenMax.to(player.carriedItem.mesh.position, 0.5, {
           x: explosionPositionX,
           y: car.mesh.position.y,
           z: this.position.z,
           onComplete: () => {
             player.dropItem();
-            this.explosionTrigger(car.mesh, player, explosionPositionX);
+            this.explosionTrigger(car, player, explosionPositionX);
             car.isDestroyed = true;
             this.removeCar(car);
-          }
-        })
-
+          },
+        });
       }
-
     }
-  }
+  };
 
   shouldCheckCollision = ({ player, car }) => {
     if (Math.round(player.position.z) == this.position.z && player.isAlive) {
@@ -170,8 +182,8 @@ export default class Road extends Object3D {
 
       if (
         player.position.x < mesh.position.x + collisionBox &&
-          player.position.x > mesh.position.x - collisionBox &&
-          !car.isDestroyed
+        player.position.x > mesh.position.x - collisionBox &&
+        !car.isDestroyed
       ) {
         player.collideWithCar(this, car);
         this.onCollide(car, "feathers", "car");
