@@ -84,8 +84,9 @@ export default class Engine {
     this._hero.isAlive = false;
     this._hero.stopIdle();
     if (type != "water") {
-      type = Characters[this._hero._character].deathParticle ? Characters[this._hero._character].deathParticle : "feathers";
-
+      type = Characters[this._hero._character].deathParticle
+        ? Characters[this._hero._character].deathParticle
+        : "feathers";
     }
     if (collision === "car") {
       AudioManager.playCarHitSound();
@@ -128,7 +129,7 @@ export default class Engine {
       Math.max(
         -2,
         this.scene.world.position.x +
-        (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
+          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
       )
     );
 
@@ -351,7 +352,6 @@ export default class Engine {
         this._hero.height + 0.5,
         this._hero.targetPosition.z
       );
-
     };
 
     // updateCarriedItemPosition();
@@ -370,6 +370,7 @@ export default class Engine {
     if (this.gameMap.collectItemDetection(this._hero)) {
       this.scene.world.add(this._hero.carriedItem.mesh);
       updateCarriedItemPosition();
+      console.log("YESS");
     }
 
     const targetRow =

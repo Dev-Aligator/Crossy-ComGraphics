@@ -1,5 +1,6 @@
 import { TweenMax } from "gsap";
 import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
+import CrossyTextureLoader from "../utils/TextureLoader";
 
 const size = 0.1;
 
@@ -64,15 +65,18 @@ export default class CarPiece {
   constructor() {
     const bigParticleGeom = new BoxGeometry(size, size, 0.1, 1);
     this.parts = [];
-    for (let i = 0; i < 6; i++) {
+    this.n = 6;
+    for (let i = 0; i < this.n; i++) {
       const material = new MeshPhongMaterial({
-        color: 0xff0000, // Or randomize color here (see option 2 below)
+        color: 0xff0000, // Or randomize color here
         flatShading: true,
       });
       const partPink = new Mesh(bigParticleGeom, material);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }
+
+    // New feature - Fire & Smoke on cars' shattered pieces
   }
 
   run = (car) => {
@@ -125,15 +129,15 @@ export default class CarPiece {
         y: Math.random() * (Math.PI * 2) + 0.2,
       });
 
-      //   const scaleTo = 0.01;
-      //   TweenMax.to(p.scale, delay, {
-      //     x: scaleTo,
-      //     y: scaleTo,
-      //     z: scaleTo,
-      //     onComplete: removeParticle,
-      //     onCompleteParams: [p],
-      //     delay: delay * 3,
-      //   });
+      const scaleTo = 0.01;
+      TweenMax.to(p.scale, 0.5, {
+        x: scaleTo,
+        y: scaleTo,
+        z: scaleTo,
+        onComplete: removeParticle,
+        onCompleteParams: [p],
+        delay: 5,
+      });
     }
   };
 }

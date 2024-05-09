@@ -17,15 +17,11 @@ import {
 import textureImage from "../../assets/particles/smoke_dark.png";
 import { explosionDuration } from "../GameSettings";
 import { GetLength } from "../utils/ThreeUtils";
+import CrossyTextureLoader from "../utils/TextureLoader";
 export default class Smoke {
   constructor() {
-    const textureLoader = new TextureLoader();
-
-    const texture = textureLoader.load(textureImage);
-    texture.generateMipmaps = false;
-    texture.magFilter = LinearFilter;
-    texture.minFilter = LinearFilter;
-    texture.premultiplyAlpha = true;
+    const textureLoader = new CrossyTextureLoader();
+    const texture = textureLoader.loadTexture(textureImage);
 
     this.fireMat = new MeshPhongMaterial({
       map: texture,

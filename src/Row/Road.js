@@ -159,6 +159,7 @@ export default class Road extends Object3D {
     ) {
       if (Math.abs(player.position.x - car.mesh.position.x) < 3) {
         car.isTargeted = true;
+        player.itemInUse = true;
         const explosionPositionX =
           car.mesh.position.x + (0.5 * car.speed) / 0.016;
         TweenMax.to(player.carriedItem.mesh.position, 0.5, {

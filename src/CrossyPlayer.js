@@ -10,11 +10,15 @@ import {
 } from "./GameSettings";
 import ModelLoader from "../src/ModelLoader";
 import { Box3, Mesh } from "three";
-import { PlayerScaleAnimation, PlayerIdleAnimation, PlayerPositionAnimation, ItemPositionAnimation } from "./Animations";
+import {
+  PlayerScaleAnimation,
+  PlayerIdleAnimation,
+  PlayerPositionAnimation,
+  ItemPositionAnimation,
+} from "./Animations";
 const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
-
 
 export default class CrossyPlayer extends Group {
   animations = [];
@@ -37,8 +41,9 @@ export default class CrossyPlayer extends Group {
     this.add(node);
     this.carriedItem = null;
     this.itemIsActive = false;
+    this.itemInUse = false;
     this.height = this.getHeight(node);
-    this.width = this.getWidth(node)
+    this.width = this.getWidth(node);
   }
 
   constructor(character) {
@@ -61,14 +66,14 @@ export default class CrossyPlayer extends Group {
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.y - box3.min.y);
-  }
+  };
 
   getWidth = (mesh) => {
     let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.x - box3.min.x);
-  }
+  };
 
   moveOnEntity() {
     if (!this.ridingOn) {
@@ -94,9 +99,8 @@ export default class CrossyPlayer extends Group {
     if (this.initialPosition) this.initialPosition.x = target;
   }
 
-
   stopAnimations() {
-    this.animations.map(val => {
+    this.animations.map((val) => {
       if (val && val.pause) {
         val.pause();
       }
@@ -177,7 +181,7 @@ export default class CrossyPlayer extends Group {
   }
 
   createItemPositionAnimation({ onComplete }) {
-    if (!this.carriedItem) {
+    if (!this.carriedItem || this.itemInUse) {
       return;
     }
     return new ItemPositionAnimation(this.carriedItem.mesh, this.height, {

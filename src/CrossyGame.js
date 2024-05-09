@@ -259,7 +259,7 @@ export class GameMap {
           new ItemPickupAnimation(itemMesh, player, () => {});
 
           player.carriedItem = this.getItem(entity.itemList[0]);
-
+          player.itemInUse = false;
           this.activeItemTimeout = setTimeout(() => {
             player.itemIsActive = true;
           }, entity.itemList[0].activeTime);
