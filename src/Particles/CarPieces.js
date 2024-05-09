@@ -60,16 +60,16 @@ const carColors = {
 };
 
 export default class CarPiece {
-  bloodMat = new MeshPhongMaterial({
-    color: 0xff0000,
-    flatShading: true,
-  });
   mesh = new Group();
   constructor() {
     const bigParticleGeom = new BoxGeometry(size, size, 0.1, 1);
     this.parts = [];
-    for (let i = 0; i < 60; i++) {
-      const partPink = new Mesh(bigParticleGeom, this.bloodMat);
+    for (let i = 0; i < 6; i++) {
+      const material = new MeshPhongMaterial({
+        color: 0xff0000, // Or randomize color here (see option 2 below)
+        flatShading: true,
+      });
+      const partPink = new Mesh(bigParticleGeom, material);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }
@@ -81,16 +81,17 @@ export default class CarPiece {
     const removeParticle = (p) => {
       p.visible = false;
     };
+    const carColorScheme = carColors[car.carTypeId];
 
     for (let i = 0; i < this.parts.length; i++) {
-      //   let m = direction < 0 ? -1 : 1;
+      let dx = Math.random() < 0.5 ? -1 : 1;
+      let dz = Math.random() < 0.5 ? -1 : 1;
 
-      let tx = Math.random() * 1 + 0.5;
+      let tx = dx * (Math.random() * 1 + 0.5);
       let ty = -Math.random() * 0.5 + 0.5;
-      let tz = -Math.random() * 2.0 + 1;
+      let tz = dz * (Math.random() * 2.0 + 1);
       let p = this.parts[i];
 
-      const carColorScheme = carColors[car.carTypeId];
       p.material.color =
         Math.random() < carColorScheme.prob
           ? carColorScheme.primary
@@ -107,23 +108,23 @@ export default class CarPiece {
         curviness: 3,
       };
 
-      p.position.set(0, 0, 0);
-      p.scale.set(1, 1, 1);
-      p.visible = true;
-      let delay = explosionSpeed + Math.random() * 0.5;
+      let sx = Math.random() * 2 + 1;
+      let sy = Math.random() + 1;
+      let sz = Math.random() * 2 + 1;
 
-      TweenMax.to(p.position, delay * 2, {
+      p.position.set(0, 0, 0);
+      p.scale.set(sx, sy, sz);
+      p.visible = true;
+
+      TweenMax.to(p.position, 0.5, {
         bezier,
         // ease: Bounce.easeOut,
       });
 
-      // TweenMax.to(p.rotation, delay * 3, {
-      //   //z: Math.random() * (Math.PI * 2) + 0.2,
-      //   //x: Math.random() * (Math.PI * 2) + 0.2,
-      //   //y: Math.random() * (Math.PI * 2) + 0.2,
-      //   delay,
-      // });
-      //
+      TweenMax.to(p.rotation, 0.5, {
+        y: Math.random() * (Math.PI * 2) + 0.2,
+      });
+
       //   const scaleTo = 0.01;
       //   TweenMax.to(p.scale, delay, {
       //     x: scaleTo,
