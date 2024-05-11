@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { Share, StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { Share, StyleSheet, Text, View } from "react-native";
 
-import Characters from '../src/Characters';
-import Colors from '../src/Colors';
-import Button from '../components/Button';
-import Carousel from '../components/CharacterSelect/Carousel';
-import Images from '../src/Images';
+import Characters from "../src/Characters";
+import Colors from "../src/Colors";
+import Button from "../components/Button";
+import Carousel from "../components/CharacterSelect/Carousel";
+import Images from "../src/Images";
 
 // import connectCharacter from '../../utils/connectCharacter';
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,
-    characters: Object.keys(Characters).map(val => Characters[val]),
+    characters: Object.keys(Characters).map((val) => Characters[val]),
   };
   dismiss = () => {
     this.props.navigation.goBack();
@@ -31,23 +31,23 @@ class CharacterSelect extends Component {
     Share.share(
       {
         message: `${character}! #BouncyBacon @expo`,
-        url: 'https://crossyroad.netlify.com',
-        title: 'Bouncy Bacon',
+        url: "https://crossyroad.netlify.com",
+        title: "Bouncy Bacon",
       },
       {
-        dialogTitle: 'Share Bouncy Bacon',
+        dialogTitle: "Share Bouncy Bacon",
         excludedActivityTypes: [
-          'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
-          'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
+          "com.apple.UIKit.activity.AirDrop", // This speeds up showing the share sheet by a lot
+          "com.apple.UIKit.activity.AddToReadingList", // This is just lame :)
         ],
         tintColor: Colors.blue,
-      },
+      }
     )
       .then(this._showResult)
-      .catch(error => this.setState({ result: 'error: ' + error.message }));
+      .catch((error) => this.setState({ result: "error: " + error.message }));
   };
 
-  _showResult = result => {
+  _showResult = (result) => {
     // if (result.action === Share.sharedAction) {
     //   if (result.activityType) {
     //     this.setState({result: 'shared with an activityType: ' + result.activityType});
@@ -61,7 +61,6 @@ class CharacterSelect extends Component {
 
   select = () => {
     const { characters, currentIndex } = this.state;
-    console.log("Con cac");
     this.props.setCharacter(characters[currentIndex]);
     this.dismiss();
   };
@@ -72,64 +71,66 @@ class CharacterSelect extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
         <View
-          style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}
+          style={{ flexDirection: "row", marginTop: 8, paddingHorizontal: 4 }}
         >
           <Button
             source={Images.button.back}
             imageStyle={imageStyle}
-            onPress={_ => {
+            onPress={(_) => {
               this.dismiss();
             }}
           />
         </View>
 
         <Carousel
-          onCurrentIndexChange={index => {
+          onCurrentIndexChange={(index) => {
             this.setState({ currentIndex: index });
           }}
         />
 
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
+            flexDirection: "row",
+            justifyContent: "center",
             marginBottom: 8,
           }}
         >
           <Button
             source={Images.button.random}
             imageStyle={imageStyle}
-            onPress={_ => {
+            onPress={(_) => {
               this.pickRandom();
             }}
           />
           <Button
             source={Images.button.long_play}
             imageStyle={{ width: 90, height: 48 }}
-            onPress={_ => {
+            onPress={(_) => {
               this.select();
             }}
           />
           <Button
             source={Images.button.social}
             imageStyle={imageStyle}
-            onPress={_ => {
+            onPress={(_) => {
               this.share();
             }}
           />
         </View>
-        {false && <Text
-          style={{
-            fontFamily: 'retro',
-            position: 'absolute',
-            fontSize: 24,
-            color: 'white',
-            bottom: 4,
-            left: 8,
-          }}
-        >
-          4/ 8
-        </Text>}
+        {false && (
+          <Text
+            style={{
+              fontFamily: "retro",
+              position: "absolute",
+              fontSize: 24,
+              color: "white",
+              bottom: 4,
+              left: 8,
+            }}
+          >
+            4/ 8
+          </Text>
+        )}
       </View>
     );
   }
@@ -148,15 +149,15 @@ CharacterSelect.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    backgroundColor: 'rgba(105, 201, 230, 0.8)',
+    justifyContent: "center",
+    alignItems: "stretch",
+    backgroundColor: "rgba(105, 201, 230, 0.8)",
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#34495e",
   },
 });

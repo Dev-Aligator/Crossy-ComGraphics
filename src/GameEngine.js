@@ -370,7 +370,6 @@ export default class Engine {
     if (this.gameMap.collectItemDetection(this._hero)) {
       this.scene.world.add(this._hero.carriedItem.mesh);
       updateCarriedItemPosition();
-      console.log("YESS");
     }
 
     const targetRow =

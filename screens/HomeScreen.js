@@ -15,6 +15,7 @@ import Hand from "../components/HandCTA";
 import Footer from "../components/Home/Footer";
 import GameContext from "../context/GameContext";
 import CharacterPicker from "../components/CharacterPicker";
+import Carousel from "../components/Home/Carousel";
 
 let hasShownTitle = false;
 
@@ -53,6 +54,7 @@ function Screen(props) {
 
   const { top, bottom, left, right } = useSafeArea();
 
+  const [openCarousel, setOpenCarousel] = React.useState(false);
   const animatedTitleStyle = {
     transform: [
       {
@@ -121,6 +123,7 @@ function Screen(props) {
           <View style={{ height: 64, marginBottom: 48, alignItems: "center" }}>
             {!__DEV__ && <Hand style={{ width: 36 }} />}
           </View>
+          {openCarousel && <Carousel></Carousel>}
           <Footer
             onCharacterSelect={() => {
               // TODO(Bacon): Create a character select page
@@ -128,9 +131,10 @@ function Screen(props) {
             onShop={() => {}}
             onMultiplayer={() => {}}
             onCamera={() => {}}
+            openCarousel={openCarousel}
+            setOpenCarousel={setOpenCarousel}
           />
         </View>
-        
       </TouchableOpacity>
     </View>
   );

@@ -5,7 +5,7 @@ import Images from "../../src/Images";
 import Button from "../Button";
 import CharacterPicker from "../CharacterPicker";
 
-const imageStyle = { width: 60, height: 48 };
+const imageStyle = { width: 80, height: 56 };
 
 export default function Footer(props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -45,16 +45,19 @@ export default function Footer(props) {
 
   return (
     <Animated.View style={[styles.container, props.style]}>
-      {/* <Button
-        style={{ maxHeight: 48 }}
-        onPress={props.onCharacterSelect}
-        imageStyle={imageStyle}
+      <Button
+        style={{ maxHeight: 56 }}
+        onPress={() => {
+          props.setOpenCarousel(!props.openCarousel);
+        }}
+        imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
         source={Images.button.character}
-      /> */}
-      <CharacterPicker></CharacterPicker>
-      {false && <CharacterPicker />}
+      />
 
-      <View style={{ flex: 1 }} />
+      {/* <CharacterPicker></CharacterPicker>
+      {false && <CharacterPicker />} */}
+
+      {/* <View style={{ flex: 1 }} />
 
       <View style={{ flexDirection: "column-reverse" }}>
         <Button
@@ -67,7 +70,7 @@ export default function Footer(props) {
         />
 
         {menuOpen && renderMenu}
-      </View>
+      </View> */}
     </Animated.View>
   );
 }

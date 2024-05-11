@@ -16,23 +16,23 @@ const banner = [
   {
     color: "#3640eb",
     title: "Thanks you for playing",
-    button: {
-      onPress: (_) => {
-        Alert.alert(
-          "Subscribe to our mailing list",
-          "Join our mailing list and discover the latest news from Expo and Evan Bacon.\n\n Read our privacy policy on https://github.com/EvanBacon/Expo-Crossy-Road/privacy.md",
-          [
-            { text: "Cancel", onPress: () => console.log("Cancel Pressed!") },
-            { text: "OK", onPress: () => console.log("OK Pressed!") },
-          ],
-          {
-            cancelable: false,
-          }
-        );
-      },
-      source: Images.button.mail,
-      style: { aspectRatio: 1.85, height: 40 },
-    },
+    // button: {
+    //   onPress: (_) => {
+    //     Alert.alert(
+    //       "Subscribe to our mailing list",
+    //       "Join our mailing list and discover the latest news from Expo and Evan Bacon.\n\n Read our privacy policy on https://github.com/EvanBacon/Expo-Crossy-Road/privacy.md",
+    //       [
+    //         { text: "Cancel", onPress: () => console.log("Cancel Pressed!") },
+    //         { text: "OK", onPress: () => console.log("OK Pressed!") },
+    //       ],
+    //       {
+    //         cancelable: false,
+    //       }
+    //     );
+    //   },
+    //   source: Images.button.mail,
+    //   style: { aspectRatio: 1.25, height: 40 },
+    // },
   },
   {
     color: "#368FEB",
@@ -40,7 +40,7 @@ const banner = [
   },
   {
     color: "#36D6EB",
-    title: "Group 9 - Final Project",
+    title: "Group 2 - Final Project",
   },
 ];
 

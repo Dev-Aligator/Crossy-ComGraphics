@@ -3,24 +3,19 @@ import {
   BoxGeometry,
   Group,
   Mesh,
-  LinearFilter,
-  MeshPhongMaterial,
   MeshBasicMaterial,
-  PlaneGeometry,
-  TextureLoader,
   CustomBlending,
   AddEquation,
   OneFactor,
   OneMinusSrcAlphaFactor,
 } from "three";
-import textureImage from "../../assets/particles/fire_dark.png";
-import { explosionDuration } from "../GameSettings";
-import { GetHeight, GetLength, GetWidth } from "../utils/ThreeUtils";
+import { GetLength } from "../utils/ThreeUtils";
 import CrossyTextureLoader from "../utils/TextureLoader";
+import Images from "../Images";
 export default class Fire {
   constructor() {
     const textureLoader = new CrossyTextureLoader();
-    const texture = textureLoader.loadTexture(textureImage);
+    const texture = textureLoader.loadTexture(Images.particle.fire);
 
     this.fireMat = new MeshBasicMaterial({
       map: texture,
