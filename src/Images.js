@@ -26,10 +26,13 @@ export default {
     shadows: require("../assets/images/buttons/shadows.png"),
     video_ads: require("../assets/images/buttons/video_ads.png"),
 
-    left_button: require("../assets/images/buttons/left_button.jpg"),
-    right_button: require("../assets/images/buttons/right_button.jpg"),
+    left_button: require("../assets/images/buttons/left_button.png"),
+    right_button: require("../assets/images/buttons/right_button.png"),
+
+    select_button: require("../assets/images/buttons/select_button.png"),
   },
   title: require("../assets/images/title.png"),
+  banner: require("../assets/images/characters/banner.png"),
   hand: {
     0: require("../assets/images/hand/0.png"),
     1: require("../assets/images/hand/1.png"),

@@ -14,7 +14,6 @@ import { useSafeArea } from "react-native-safe-area-context";
 import Hand from "../components/HandCTA";
 import Footer from "../components/Home/Footer";
 import GameContext from "../context/GameContext";
-import CharacterPicker from "../components/CharacterPicker";
 import Carousel from "../components/Home/Carousel";
 
 let hasShownTitle = false;
@@ -123,7 +122,9 @@ function Screen(props) {
           <View style={{ height: 64, marginBottom: 48, alignItems: "center" }}>
             {!__DEV__ && <Hand style={{ width: 36 }} />}
           </View>
-          {openCarousel && <Carousel></Carousel>}
+          {openCarousel && (
+            <Carousel setOpenCarousel={setOpenCarousel}></Carousel>
+          )}
           <Footer
             onCharacterSelect={() => {
               // TODO(Bacon): Create a character select page

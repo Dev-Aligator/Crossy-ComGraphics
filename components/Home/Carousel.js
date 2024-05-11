@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import React from "react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -9,40 +9,43 @@ import Images from "../../src/Images";
 import { StyleSheet } from "react-native";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 import Button from "../Button";
+import ActionAreaCard from "../ActionAreaCard";
+import Characters from "../../src/Characters";
+import GameContext from "../../context/GameContext";
+
 // import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
 const Carousel = (props) => {
-  const hotAnimeList = [
-    {
-      name: "Weathering With You",
-      year: "2019",
-      poster: Images.particle.fire,
-    },
-    {
-      name: "Overlord",
-      year: "2015",
-      poster: Images.particle.fire,
-    },
-    {
-      name: "That Time I Got Reincarnated as a Slime",
-      year: "2018",
-      poster: Images.particle.fire,
-    },
-    {
-      name: "Mirai",
-      year: "2018",
-      poster: Images.particle.fire,
-    },
-  ];
+  const characterMap = {
+    0: "bacon",
+    1: "brent",
+    2: "avocoder",
+    3: "wheeler",
+    4: "palmer",
+    5: "juwan",
+    6: "cser",
+  };
+
+  const getCharacterIndex = (name) => {
+    const index = Object.values(characterMap).indexOf(name);
+    return index !== -1 ? index : null;
+  };
+
   const imageStyle = { width: 80, height: 56 };
+  const [swiperIndex, setSwiperIndex] = React.useState(0);
+  const { setCharacter, character } = React.useContext(GameContext);
 
   return (
     <div className="flex-container-carousel">
-      <div className="banner-carousel relative-top-50px">
-        <p>SELECT YOUR CHARACTER</p>
+      <div className="relative-top-50px">
+        <img width={"100%"} src={Images.banner}></img>
       </div>
       <div className="main-carousel-container">
         <Swiper
+          onRealIndexChange={(swiperCore) => {
+            setSwiperIndex(swiperCore.realIndex);
+          }}
+          initialSlide={getCharacterIndex(character)}
           effect={"coverflow"}
           grabCursor={true}
           centeredSlides={true}
@@ -63,9 +66,13 @@ const Carousel = (props) => {
           modules={[EffectCoverflow, Pagination, Navigation]}
           className="swiper_container"
         >
-          {hotAnimeList.map((anime, index) => (
-            <SwiperSlide key={index}>
-              <img src={anime.poster} alt={anime.name + anime.year} />
+          {Object.keys(Characters).map((index) => (
+            <SwiperSlide key={index} className="swiper-element">
+              <ActionAreaCard
+                image={Characters[index].image}
+                name={Characters[index].name}
+                description={Characters[index].description}
+              ></ActionAreaCard>
             </SwiperSlide>
           ))}
 
@@ -85,8 +92,20 @@ const Carousel = (props) => {
                 source={Images.button.right_button}
               />
             </div>
-            <div className="swiper-button-confirm-selection banner-carousel">
-              <p>SELECT</p>
+            <div className="swiper-button-confirm-selection">
+              <Button
+                onPress={() => {
+                  setCharacter(Characters[characterMap[swiperIndex]].id);
+                  props.setOpenCarousel(false);
+                }}
+                style={{ maxHeight: 56 }}
+                imageStyle={{
+                  height: "150px",
+                  width: "125px",
+                  aspectRatio: 1.25,
+                }}
+                source={Images.button.select_button}
+              />
             </div>
           </div>
         </Swiper>

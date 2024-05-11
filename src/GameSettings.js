@@ -1,5 +1,5 @@
 export const groundLevel = 0.4;
-export const sceneColor = 0x87C6FF;
+export const sceneColor = 0x87c6ff;
 export const startingRow = 8;
 export const maxRows = 20;
 export const disableDriftwood = false;
