@@ -29,11 +29,29 @@ export default function ActionAreaCard(props) {
             // left: "0px",
           }}
         />
-        <CardContent style={{ background: "#55c7f9", minHeight: "100px" }}>
-          <Typography gutterBottom variant="h5" component="div">
+        <CardContent
+          style={{
+            background: "#55c7f9",
+            minHeight: "100px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            style={{ fontWeight: "bold" }}
+          >
             {props.name}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ textAlign: "center" }}
+          >
             {props.description}
           </Typography>
         </CardContent>

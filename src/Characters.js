@@ -50,7 +50,7 @@ export default {
     id: "cser",
     deathParticle: "blood",
     description:
-      "CS-er is a software engineer at Expo. He is a React Native expert and a contributor to the React Native community.",
+      "CS-er is a computer science student at UIT. He is not a React Native expert and struggle with Computer Graphics course  .",
     image: require("../assets/images/characters/cs_er.png"),
   },
 };

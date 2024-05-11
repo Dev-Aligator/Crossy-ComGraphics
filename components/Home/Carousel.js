@@ -12,6 +12,7 @@ import Button from "../Button";
 import ActionAreaCard from "../ActionAreaCard";
 import Characters from "../../src/Characters";
 import GameContext from "../../context/GameContext";
+import { motion } from "framer-motion";
 
 // import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
@@ -41,74 +42,80 @@ const Carousel = (props) => {
         <img width={"100%"} src={Images.banner}></img>
       </div>
       <div className="main-carousel-container">
-        <Swiper
-          onRealIndexChange={(swiperCore) => {
-            setSwiperIndex(swiperCore.realIndex);
-          }}
-          initialSlide={getCharacterIndex(character)}
-          effect={"coverflow"}
-          grabCursor={true}
-          centeredSlides={true}
-          loop={true}
-          slidesPerView={"auto"}
-          coverflowEffect={{
-            rotate: 0,
-            stretch: 0,
-            depth: 100,
-            modifier: 2.5,
-          }}
-          pagination={{ el: ".swiper-pagination", clickable: true }}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-            // clickable: true,
-          }}
-          modules={[EffectCoverflow, Pagination, Navigation]}
-          className="swiper_container"
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {Object.keys(Characters).map((index) => (
-            <SwiperSlide key={index} className="swiper-element">
-              <ActionAreaCard
-                image={Characters[index].image}
-                name={Characters[index].name}
-                description={Characters[index].description}
-              ></ActionAreaCard>
-            </SwiperSlide>
-          ))}
+          <Swiper
+            onRealIndexChange={(swiperCore) => {
+              setSwiperIndex(swiperCore.realIndex);
+            }}
+            initialSlide={getCharacterIndex(character)}
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            loop={true}
+            slidesPerView={"auto"}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 0,
+              depth: 100,
+              modifier: 2.5,
+            }}
+            pagination={{ el: ".swiper-pagination", clickable: true }}
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+              // clickable: true,
+            }}
+            modules={[EffectCoverflow, Pagination, Navigation]}
+            className="swiper_container"
+          >
+            {Object.keys(Characters).map((index) => (
+              <SwiperSlide key={index} className="swiper-element">
+                <ActionAreaCard
+                  image={Characters[index].image}
+                  name={Characters[index].name}
+                  description={Characters[index].description}
+                ></ActionAreaCard>
+              </SwiperSlide>
+            ))}
 
-          <div className="slider-controler">
-            <div className="swiper-button-prev slider-arrow">
-              <Button
-                style={{ maxHeight: 56 }}
-                imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
-                source={Images.button.left_button}
-              />
-            </div>
+            <div className="slider-controler">
+              <div className="swiper-button-prev slider-arrow">
+                <Button
+                  style={{ maxHeight: 56 }}
+                  imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
+                  source={Images.button.left_button}
+                />
+              </div>
 
-            <div className="swiper-button-next slider-arrow">
-              <Button
-                style={{ maxHeight: 56 }}
-                imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
-                source={Images.button.right_button}
-              />
+              <div className="swiper-button-next slider-arrow">
+                <Button
+                  style={{ maxHeight: 56 }}
+                  imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
+                  source={Images.button.right_button}
+                />
+              </div>
+              <div className="swiper-button-confirm-selection">
+                <Button
+                  onPress={() => {
+                    setCharacter(Characters[characterMap[swiperIndex]].id);
+                    props.setOpenCarousel(false);
+                  }}
+                  style={{ maxHeight: 56 }}
+                  imageStyle={{
+                    height: "150px",
+                    width: "125px",
+                    aspectRatio: 1.25,
+                  }}
+                  source={Images.button.select_button}
+                />
+              </div>
             </div>
-            <div className="swiper-button-confirm-selection">
-              <Button
-                onPress={() => {
-                  setCharacter(Characters[characterMap[swiperIndex]].id);
-                  props.setOpenCarousel(false);
-                }}
-                style={{ maxHeight: 56 }}
-                imageStyle={{
-                  height: "150px",
-                  width: "125px",
-                  aspectRatio: 1.25,
-                }}
-                source={Images.button.select_button}
-              />
-            </div>
-          </div>
-        </Swiper>
+          </Swiper>
+        </motion.div>
       </div>
     </div>
   );

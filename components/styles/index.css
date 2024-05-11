@@ -15,6 +15,7 @@
   /* Create a thin, blue-based color border */
   border: 5px solid rgb(255, 255, 255);
   border-radius: 20px;
+  box-shadow: 2px 2px 50px #333;
 }
 
 .relative-top-50px {
@@ -93,7 +94,7 @@
       height: unset !important; }
     .slider-controler .slider-arrow::after {
       content: ''; } */
-
+/* 
 @media (max-width: 990px) {
   .slider-controler .swiper-button-next {
     left: 70% !important;
@@ -112,7 +113,7 @@
 @media (max-width: 450px) {
   .slider-controler .swiper-button-prev {
     left: 20% !important;
-    transform: translateX(-20%) !important; } }
+    transform: translateX(-20%) !important; } } */
 
 .swiper-pagination {
   position: relative;
@@ -129,6 +130,11 @@
   .flex-container-carousel {
     width: 70% !important;
   }
+}
+
+@media (max-width: 990px) {
+
+  
 }
 
 
