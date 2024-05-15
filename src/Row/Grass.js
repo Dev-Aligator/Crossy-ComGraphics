@@ -1,4 +1,4 @@
-import { Box3, Object3D } from "three";
+import { Box3, Object3D, BoxGeometry, MeshBasicMaterial, Mesh } from "three";
 import { utils } from "expo-three";
 import ModelLoader from "../../src/ModelLoader";
 import {
@@ -115,6 +115,7 @@ export default class Grass extends Object3D {
       }
 
       const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
+      console.log(ItemList);
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
       let mesh = ModelLoader._item.getNode(randomItem.id);
       ScaleMeshWidthToSize(mesh, randomItem.scaleGround);
@@ -122,9 +123,12 @@ export default class Grass extends Object3D {
       const width = this.getWidth(mesh);
 
       this.floor.add(mesh);
-      mesh.position.set(itemPosX, groundLevel, 0);
+      mesh.position.set(itemPosX - randomItem.alignOffset, groundLevel, 0);
       mesh.rotation.y = randomItem.rotateY;
 
+      if (randomItem.effect) {
+        const effectMesh = this.constructItemEffect(itemPosX);
+      }
       this.itemList.push({
         mesh,
         width,
@@ -147,6 +151,19 @@ export default class Grass extends Object3D {
       // Start the timeline
       tl.play();
     }
+  };
+
+  constructItemEffect = (itemPosx) => {
+    let effectGeom = new BoxGeometry(0.5, 1.5, 0.23);
+    let effectMat = new MeshBasicMaterial({
+      color: 0xa93acf,
+      transparent: true,
+      opacity: 0.5,
+    });
+    let effectMesh = new Mesh(effectGeom, effectMat);
+    this.floor.add(effectMesh);
+    effectMesh.position.set(itemPosx, groundLevel, 0);
+    return effectMesh;
   };
 
   constructor(heroWidth, onCollide) {

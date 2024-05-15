@@ -20,7 +20,7 @@ import {
   startingRow,
 } from "./GameSettings";
 import { detectUsedItem } from "./Row/Road";
-
+import { DirectionalLight } from "three";
 const initialState = {
   id: Characters.bacon.id,
   name: Characters.bacon.name,
