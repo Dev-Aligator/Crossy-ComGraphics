@@ -1,7 +1,11 @@
 import { Box3, Object3D } from "three";
 import { utils } from "expo-three";
 import ModelLoader from "../../src/ModelLoader";
-import { groundLevel, itemGenerationRate, DISABLE_ITEMS } from "../GameSettings";
+import {
+  groundLevel,
+  itemGenerationRate,
+  DISABLE_ITEMS,
+} from "../GameSettings";
 import { Power2, TweenMax } from "gsap";
 import ItemList from "../Items";
 export const Fill = {
@@ -9,6 +13,8 @@ export const Fill = {
   solid: "solid",
   random: "random",
 };
+
+import { ScaleMeshWidthToSize } from "../utils/ThreeUtils";
 
 const HAS_WALLS = true;
 const HAS_OBSTACLES = true;
@@ -48,7 +54,7 @@ export default class Grass extends Object3D {
 
     this.itemList = [];
 
-    if (!DISABLE_ITEMS){
+    if (!DISABLE_ITEMS) {
       this.itemGen();
     }
   };
@@ -111,13 +117,14 @@ export default class Grass extends Object3D {
       const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
       let mesh = ModelLoader._item.getNode(randomItem.id);
-      utils.scaleLongestSideToSize(mesh, randomItem.scaleGround);
-      utils.alignMesh(mesh, { x: 0.25, z: 0.25, y: 0.5 });
+      ScaleMeshWidthToSize(mesh, randomItem.scaleGround);
+      utils.alignMesh(mesh, { x: 0.5, z: 1, y: 0.5 });
       const width = this.getWidth(mesh);
 
       this.floor.add(mesh);
       mesh.position.set(itemPosX, groundLevel, 0);
       mesh.rotation.y = randomItem.rotateY;
+
       this.itemList.push({
         mesh,
         width,
@@ -139,7 +146,6 @@ export default class Grass extends Object3D {
 
       // Start the timeline
       tl.play();
-
     }
   };
 

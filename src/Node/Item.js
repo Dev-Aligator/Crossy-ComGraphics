@@ -1,6 +1,6 @@
 import Generic from "./Generic";
 
-const itemsList = ["bomb"];
+const itemsList = ["bomb", "revive_crystal"];
 export default class Item extends Generic {
   setup = async () => {
     const { items } = this.globalModels;
