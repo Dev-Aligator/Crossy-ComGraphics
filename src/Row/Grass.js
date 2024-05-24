@@ -116,12 +116,17 @@ export default class Grass extends Object3D {
         return;
       }
 
-      const randomItemIndex = 1; // Math.floor(Math.random() * this.itemNames.length);
-      const randomItem = ItemList[this.itemNames[randomItemIndex]];
+      let randomItem;
 
-      // if (Math.random() < randomItem.rate) {
-      //   return;
-      // }
+      const randomRoulette = Math.random();
+      let accumulatedRate = 0;
+      for (let i = 0; i < this.itemNames.length; i++) {
+        accumulatedRate += ItemList[this.itemNames[i]].rate;
+        if (randomRoulette <= accumulatedRate) {
+          randomItem = ItemList[this.itemNames[i]];
+          break;
+        }
+      }
       let mesh = ModelLoader._item.getNode(randomItem.id);
       ScaleMeshWidthToSize(mesh, randomItem.scaleGround);
       utils.alignMesh(mesh, { x: 0.5, z: 1, y: 0.5 });
@@ -141,6 +146,7 @@ export default class Grass extends Object3D {
         timeOut: randomItem.timeOut,
         scalePlayer: randomItem.scalePlayer,
         activeTime: randomItem.activeTime,
+        itemFunction: randomItem.itemFunction,
       });
 
       const tl = new TimelineMax();

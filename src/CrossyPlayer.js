@@ -42,6 +42,8 @@ export default class CrossyPlayer extends Group {
     this.carriedItem = null;
     this.itemIsActive = false;
     this.itemInUse = false;
+    this.isProtected = false;
+    this.checkpoint = null;
     this.height = this.getHeight(node);
     this.width = this.getWidth(node);
   }

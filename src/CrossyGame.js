@@ -254,22 +254,28 @@ export class GameMap {
           if (this.activeItemTimeout) {
             clearTimeout(this.activeItemTimeout);
           }
-
+          const pickedItem = entity.itemList[0];
           player.dropItem();
           new ItemPickupAnimation(itemMesh, player, () => {});
 
-          player.carriedItem = this.getItem(entity.itemList[0]);
+          player.carriedItem = this.getItem(pickedItem);
           player.itemInUse = false;
           this.activeItemTimeout = setTimeout(() => {
             player.itemIsActive = true;
-          }, entity.itemList[0].activeTime);
+          }, pickedItem.activeTime);
 
+          if (
+            pickedItem.itemFunction &&
+            typeof pickedItem.itemFunction === "function"
+          ) {
+            pickedItem.itemFunction(player);
+          }
           entity.destroyItemEffect(itemMesh);
           // Drop certain items if you hold them for too long
           this.dropItemTimeout = setTimeout(() => {
             player.dropItem(); // Drop the item after the timeout
             // Additional actions you want to perform after the timeout
-          }, entity.itemList[0].timeOut);
+          }, pickedItem.timeOut);
 
           entity.itemList.pop();
 

@@ -97,7 +97,20 @@ export default class Engine {
     }
     this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
-    this.gameOver();
+
+    if (this._hero.isProtected) {
+      this._hero.isProtected = false;
+      setTimeout(() => {
+        this._hero.reset();
+        this._hero.position.set(
+          this._hero.checkpoint.x,
+          this._hero.checkpoint.y,
+          this._hero.checkpoint.z
+        );
+        this._hero.targetPosition = this._hero.position;
+        this._hero.rotation.set(0, 0, 0);
+      }, 1000);
+    } else this.gameOver();
   };
 
   // Setup initial scene
@@ -209,7 +222,6 @@ export default class Engine {
     if (this.isGameEnded()) {
       return;
     }
-
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
 
     this._hero.ridingOn = null;
@@ -298,6 +310,17 @@ export default class Engine {
                 );
               }
             }
+          }
+          if (
+            this.gameMap.getRow(this._hero.initialPosition.z + velocity.z)
+              .type === "grass" &&
+            this._hero.isProtected
+          ) {
+            this._hero.checkpoint = {
+              x: this._hero.targetPosition.x,
+              y: this._hero.targetPosition.y,
+              z: this._hero.targetPosition.z,
+            };
           }
 
           this._hero.moving = true;
