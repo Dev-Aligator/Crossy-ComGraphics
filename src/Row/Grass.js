@@ -14,6 +14,8 @@ export const Fill = {
   random: "random",
 };
 
+import BlueStar from "../Particles/Stars/BlueStar";
+import PurpleStar from "../Particles/Stars/PurpleStar";
 import { ScaleMeshWidthToSize } from "../utils/ThreeUtils";
 
 const HAS_WALLS = true;
@@ -114,9 +116,12 @@ export default class Grass extends Object3D {
         return;
       }
 
-      const randomItemIndex = Math.floor(Math.random() * this.itemNames.length);
-      console.log(ItemList);
+      const randomItemIndex = 1; // Math.floor(Math.random() * this.itemNames.length);
       const randomItem = ItemList[this.itemNames[randomItemIndex]];
+
+      // if (Math.random() < randomItem.rate) {
+      //   return;
+      // }
       let mesh = ModelLoader._item.getNode(randomItem.id);
       ScaleMeshWidthToSize(mesh, randomItem.scaleGround);
       utils.alignMesh(mesh, { x: 0.5, z: 1, y: 0.5 });
@@ -127,7 +132,7 @@ export default class Grass extends Object3D {
       mesh.rotation.y = randomItem.rotateY;
 
       if (randomItem.effect) {
-        const effectMesh = this.constructItemEffect(itemPosX);
+        this.constructItemEffect(itemPosX);
       }
       this.itemList.push({
         mesh,
@@ -140,8 +145,8 @@ export default class Grass extends Object3D {
 
       const tl = new TimelineMax();
 
-      // Add a delay of 3 seconds before starting the animation
-      tl.to({}, 3, {});
+      // Add a delay of 2 seconds before starting the animation
+      tl.to({}, 2, {});
 
       // Floating animation
       tl.to(mesh.position, 1, { y: "+=0.1", ease: Power1.easeInOut }, "-=1") // Up
@@ -153,17 +158,33 @@ export default class Grass extends Object3D {
     }
   };
 
-  constructItemEffect = (itemPosx) => {
-    let effectGeom = new BoxGeometry(0.5, 1.5, 0.23);
-    let effectMat = new MeshBasicMaterial({
-      color: 0xa93acf,
-      transparent: true,
-      opacity: 0.5,
-    });
-    let effectMesh = new Mesh(effectGeom, effectMat);
-    this.floor.add(effectMesh);
-    effectMesh.position.set(itemPosx, groundLevel, 0);
-    return effectMesh;
+  constructItemEffect = (itemPosX) => {
+    // Blur Star Effect
+    this.blueStar = new BlueStar();
+    this.floor.add(this.blueStar.mesh);
+    this.blueStar.mesh.position.set(itemPosX, groundLevel, 0);
+    this.blueStar.run();
+
+    // Purple Star Effect
+    this.purpleStar = new PurpleStar();
+    this.floor.add(this.purpleStar.mesh);
+    this.purpleStar.mesh.position.set(itemPosX, groundLevel, 0);
+    this.purpleStar.run();
+  };
+
+  destroyItemEffect = (itemMesh) => {
+    if (itemMesh) {
+      this.floor.remove(itemMesh);
+    }
+    if (this.blueStar) {
+      this.floor.remove(this.blueStar.mesh);
+      this.blueStar = null;
+    }
+
+    if (this.purpleStar) {
+      this.floor.remove(this.purpleStar.mesh);
+      this.purpleStar = null;
+    }
   };
 
   constructor(heroWidth, onCollide) {

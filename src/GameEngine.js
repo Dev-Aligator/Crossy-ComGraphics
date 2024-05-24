@@ -20,7 +20,7 @@ import {
   startingRow,
 } from "./GameSettings";
 import { detectUsedItem } from "./Row/Road";
-import { DirectionalLight } from "three";
+
 const initialState = {
   id: Characters.bacon.id,
   name: Characters.bacon.name,
@@ -370,7 +370,6 @@ export default class Engine {
     if (this.gameMap.collectItemDetection(this._hero)) {
       this.scene.world.add(this._hero.carriedItem.mesh);
       updateCarriedItemPosition();
-      console.log("YESS");
     }
 
     const targetRow =

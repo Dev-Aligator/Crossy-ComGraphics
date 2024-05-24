@@ -245,7 +245,7 @@ export class GameMap {
       if (type === "grass" && entity.itemList[0]) {
         const key = `${player.targetPosition.x | 0}`;
         const itemMesh = entity.itemList[0].mesh;
-        if (key == itemMesh.position.x) {
+        if (key == Math.ceil(itemMesh.position.x)) {
           // Clear the old timeout if it exists
           if (this.dropItemTimeout) {
             clearTimeout(this.dropItemTimeout);
@@ -264,8 +264,7 @@ export class GameMap {
             player.itemIsActive = true;
           }, entity.itemList[0].activeTime);
 
-          entity.floor.remove(itemMesh);
-
+          entity.destroyItemEffect(itemMesh);
           // Drop certain items if you hold them for too long
           this.dropItemTimeout = setTimeout(() => {
             player.dropItem(); // Drop the item after the timeout
