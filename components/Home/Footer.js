@@ -44,12 +44,17 @@ export default function Footer(props) {
     );
   }, [collapse]);
 
-  const [screenWidth, setScreenWidth] = React.useState(
-    Dimensions.get("window").width
-  );
+  const [screenSize, setScreenSize] = React.useState([
+    Dimensions.get("window").width,
+    Dimensions.get("window").height,
+  ]);
 
   const handleResize = () => {
-    setScreenWidth(Dimensions.get("window").width);
+    props.setOpenCarousel(false);
+    setScreenSize([
+      Dimensions.get("window").width,
+      Dimensions.get("window").height,
+    ]);
   };
 
   React.useEffect(() => {
@@ -61,8 +66,24 @@ export default function Footer(props) {
 
   return (
     <Animated.View style={[styles.container, props.style]}>
-      {screenWidth < 700 ? (
-        <CharacterPicker></CharacterPicker>
+      {screenSize[0] < 1000 || screenSize[1] < 900 ? (
+        <>
+          <CharacterPicker></CharacterPicker>
+          <View style={{ flex: 1 }} />
+
+          <View style={{ flexDirection: "column-reverse" }}>
+            <Button
+              onPress={() => {
+                setMenuOpen(!menuOpen);
+              }}
+              style={[{ opacity: menuOpen ? 0.8 : 1.0 }, imageStyle]}
+              imageStyle={imageStyle}
+              source={Images.button.menu}
+            />
+
+            {menuOpen && renderMenu}
+          </View>
+        </>
       ) : (
         <Button
           style={{ maxHeight: 56 }}
