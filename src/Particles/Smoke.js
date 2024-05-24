@@ -1,27 +1,13 @@
 import { TweenMax } from "gsap";
-import {
-  BoxGeometry,
-  SphereGeometry,
-  Group,
-  Mesh,
-  LinearFilter,
-  MeshPhongMaterial,
-  MeshBasicMaterial,
-  PlaneGeometry,
-  TextureLoader,
-  CustomBlending,
-  AddEquation,
-  OneFactor,
-  OneMinusSrcAlphaFactor,
-} from "three";
-import textureImage from "../../assets/particles/smoke_dark.png";
+import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
+import Images from "../Images";
 import { explosionDuration } from "../GameSettings";
 import { GetLength } from "../utils/ThreeUtils";
 import CrossyTextureLoader from "../utils/TextureLoader";
 export default class Smoke {
   constructor() {
     const textureLoader = new CrossyTextureLoader();
-    const texture = textureLoader.loadTexture(textureImage);
+    const texture = textureLoader.loadTexture(Images.particle.smoke);
 
     this.fireMat = new MeshPhongMaterial({
       map: texture,

@@ -6,8 +6,7 @@ import GameContext from "../context/GameContext";
 import Characters from "../src/Characters";
 
 export default function CharacterPicker(props) {
-  const { setCharacter, character } = React.useContext(GameContext);  
-
+  const { setCharacter, character } = React.useContext(GameContext);
 
   return (
     <Picker
@@ -15,7 +14,7 @@ export default function CharacterPicker(props) {
       style={styles.picker}
       onValueChange={(itemValue, itemIndex) => {
         setCharacter(itemValue);
-        document.activeElement.blur(); 
+        document.activeElement.blur();
       }}
     >
       {Object.keys(Characters).map((id) => (

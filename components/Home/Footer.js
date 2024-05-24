@@ -4,8 +4,9 @@ import { LayoutAnimation, Animated, StyleSheet, View } from "react-native";
 import Images from "../../src/Images";
 import Button from "../Button";
 import CharacterPicker from "../CharacterPicker";
+import { Dimensions } from "react-native";
 
-const imageStyle = { width: 60, height: 48 };
+const imageStyle = { width: 80, height: 56 };
 
 export default function Footer(props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -43,31 +44,56 @@ export default function Footer(props) {
     );
   }, [collapse]);
 
+  const [screenSize, setScreenSize] = React.useState([
+    Dimensions.get("window").width,
+    Dimensions.get("window").height,
+  ]);
+
+  const handleResize = () => {
+    props.setOpenCarousel(false);
+    setScreenSize([
+      Dimensions.get("window").width,
+      Dimensions.get("window").height,
+    ]);
+  };
+
+  React.useEffect(() => {
+    Dimensions.addEventListener("change", handleResize);
+    return () => {
+      Dimensions.removeEventListener("change", handleResize);
+    };
+  }, []);
+
   return (
     <Animated.View style={[styles.container, props.style]}>
-      {/* <Button
-        style={{ maxHeight: 48 }}
-        onPress={props.onCharacterSelect}
-        imageStyle={imageStyle}
-        source={Images.button.character}
-      /> */}
-      <CharacterPicker></CharacterPicker>
-      {false && <CharacterPicker />}
+      {screenSize[0] < 1000 || screenSize[1] < 900 ? (
+        <>
+          <CharacterPicker></CharacterPicker>
+          <View style={{ flex: 1 }} />
 
-      <View style={{ flex: 1 }} />
+          <View style={{ flexDirection: "column-reverse" }}>
+            <Button
+              onPress={() => {
+                setMenuOpen(!menuOpen);
+              }}
+              style={[{ opacity: menuOpen ? 0.8 : 1.0 }, imageStyle]}
+              imageStyle={imageStyle}
+              source={Images.button.menu}
+            />
 
-      <View style={{ flexDirection: "column-reverse" }}>
+            {menuOpen && renderMenu}
+          </View>
+        </>
+      ) : (
         <Button
+          style={{ maxHeight: 56 }}
           onPress={() => {
-            setMenuOpen(!menuOpen);
+            props.setOpenCarousel(!props.openCarousel);
           }}
-          style={[{ opacity: menuOpen ? 0.8 : 1.0 }, imageStyle]}
-          imageStyle={imageStyle}
-          source={Images.button.menu}
+          imageStyle={[imageStyle, { aspectRatio: 1.25 }]}
+          source={Images.button.character}
         />
-
-        {menuOpen && renderMenu}
-      </View>
+      )}
     </Animated.View>
   );
 }
