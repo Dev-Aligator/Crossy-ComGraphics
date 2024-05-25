@@ -66,7 +66,7 @@ export default function Footer(props) {
 
   return (
     <Animated.View style={[styles.container, props.style]}>
-      {screenSize[0] < 1000 || screenSize[1] < 900 ? (
+      {screenSize[0] < 1200 || screenSize[1] < 900 ? (
         <>
           <CharacterPicker></CharacterPicker>
           <View style={{ flex: 1 }} />
