@@ -40,6 +40,7 @@ export default class Generic {
     castShadow,
     receiveShadow,
     scale = null,
+    rate = null,
   }) => {
     const material = CrossyMaterial.load(texture);
 
@@ -52,7 +53,6 @@ export default class Generic {
         }
       }
     });
-
     setShadows(_model, { castShadow, receiveShadow });
     return _model;
   };
@@ -82,7 +82,7 @@ export default class Generic {
     }
   }
 
-  getTotalKey() {
+  getTotalKeys() {
     return Object.keys(this.models).length;
   }
 

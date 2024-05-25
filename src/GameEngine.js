@@ -3,6 +3,7 @@ import { swipeDirections } from "../components/GestureView";
 import AudioManager from "../src/AudioManager";
 import ModelLoader from "../src/ModelLoader";
 import Characters from "./Characters";
+import { TweenMax } from "gsap";
 import { utils } from "expo-three";
 import {
   CrossyCamera,
@@ -19,7 +20,8 @@ import {
   sceneColor,
   startingRow,
 } from "./GameSettings";
-import { detectUsedItem } from "./Row/Road";
+
+import { SpotLight } from "three";
 
 const initialState = {
   id: Characters.bacon.id,
@@ -96,21 +98,70 @@ export default class Engine {
       AudioManager.playDeathSound();
     }
     this.scene.useParticle(this._hero, type, obstacle.speed);
-    this.scene.rumble();
 
     if (this._hero.isProtected) {
       this._hero.isProtected = false;
+      this._hero.disableMoving = true;
+      const spotLight = new SpotLight(0x0080ff, 10);
+      spotLight.position.set(
+        this._hero.checkpoint.x,
+        this._hero.checkpoint.y + 10,
+        this._hero.checkpoint.z - 12
+      );
+      spotLight.angle = 0;
+      spotLight.penumbra = 1;
+      spotLight.power = 10;
+      spotLight.decay = 2;
+
+      spotLight.intensity = 10;
+
+      spotLight.target.position.set(
+        this._hero.checkpoint.x,
+        this._hero.checkpoint.y,
+        this._hero.checkpoint.z - 12
+      );
+      spotLight.target = this._hero;
+      spotLight.target.updateMatrixWorld();
       setTimeout(() => {
         this._hero.reset();
+        this._hero.scale.set(0.01, 0.01, 0.01);
         this._hero.position.set(
           this._hero.checkpoint.x,
           this._hero.checkpoint.y,
           this._hero.checkpoint.z
         );
+
+        this.scene.add(spotLight);
+
+        const spotlightAngleOpen = setInterval(() => {
+          spotLight.angle += Math.PI / 512;
+          if (spotLight.angle >= Math.PI / 32) {
+            clearInterval(spotlightAngleOpen);
+            TweenMax.to(this._hero.scale, 1, {
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: "elastic.out(1, 0.3)",
+            });
+            setTimeout(() => {
+              const spotlightAngleClose = setInterval(() => {
+                spotLight.angle -= Math.PI / 512;
+                if (spotLight.angle <= 0.0001) {
+                  clearInterval(spotlightAngleClose);
+                  this.scene.remove(spotLight);
+                  this._hero.disableMoving = false;
+                }
+              }, 100);
+            }, 1000);
+          }
+        }, 100);
         this._hero.targetPosition = this._hero.position;
         this._hero.rotation.set(0, 0, 0);
-      }, 1000);
-    } else this.gameOver();
+      }, 3000);
+    } else {
+      this.scene.rumble();
+      this.gameOver();
+    }
   };
 
   // Setup initial scene
@@ -219,7 +270,7 @@ export default class Engine {
   };
 
   moveWithDirection = (direction) => {
-    if (this.isGameEnded()) {
+    if (this.isGameEnded() || this._hero.disableMoving) {
       return;
     }
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
