@@ -82,6 +82,10 @@ export default class Generic {
     }
   }
 
+  getTotalKey() {
+    return Object.keys(this.models).length;
+  }
+
   _register = async (key, props) => {
     return (this.models[key] = await this._download(props));
   };
