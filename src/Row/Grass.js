@@ -147,6 +147,8 @@ export default class Grass extends Object3D {
         scalePlayer: randomItem.scalePlayer,
         activeTime: randomItem.activeTime,
         itemFunction: randomItem.itemFunction,
+        itemWhileCarrying: randomItem.whileCarrying,
+        spinSpeedWhileCarrying: randomItem.spinSpeedWhileCarrying,
       });
 
       const tl = new TimelineMax();

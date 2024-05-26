@@ -1,22 +1,20 @@
 import Generic from "./Generic";
 
-const effectList = [
-    // 'explosion',
-]
+const effectList = ["angle_ring"];
 
 export default class Effect extends Generic {
-    setup = async () => {
-        const { effects } = this.globalModels;
+  setup = async () => {
+    const { effects } = this.globalModels;
 
-        for (let index in effectList) {
-            let effect = effectList[index];
-            await this._register(`${index}`,{
-                ...effects[effect],
-                castShadow: true,
-                receiveShadow: true,
-            })
-        }
-        
-        return this.models
-    };
+    for (let index in effectList) {
+      let effect = effectList[index];
+      await this._register(`${effect}`, {
+        ...effects[effect],
+        castShadow: true,
+        receiveShadow: true,
+      });
+    }
+
+    return this.models;
+  };
 }

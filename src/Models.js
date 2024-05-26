@@ -196,9 +196,9 @@ export default {
   },
 
   effects: {
-    // explosion: {
-    //   model: require('../assets/models/effects/explosion/explosion.obj'),
-    //   texture: require('../assets/models/effects/explosion/explosion.png'),
-    // }
+    angle_ring: {
+      model: require("../assets/models/effects/angle_ring/angle-ring.obj"),
+      texture: require("../assets/models/effects/angle_ring/angle-ring.png"),
+    },
   },
 };

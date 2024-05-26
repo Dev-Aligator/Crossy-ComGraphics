@@ -102,6 +102,14 @@ export default class Engine {
     if (this._hero.isProtected) {
       this._hero.isProtected = false;
       this._hero.disableMoving = true;
+      this._hero.dropItem();
+      TweenMax.to(this._hero.scale, 1, {
+        x: 0.01,
+        y: 0.01,
+        z: 0.01,
+        ease: "elastic.out(1, 0.3)",
+      });
+
       const spotLight = new SpotLight(0x0080ff, 10);
       spotLight.position.set(
         this._hero.checkpoint.x,

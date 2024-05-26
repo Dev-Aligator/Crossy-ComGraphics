@@ -222,16 +222,18 @@ export class GameMap {
     return false;
   };
 
-  getItem = (itemObj) => {
-    let mesh = ModelLoader._item.getNode(itemObj.id);
+  getItemWhileCarryingMesh = (itemObj) => {
+    let mesh =
+      itemObj.itemWhileCarrying === "self"
+        ? ModelLoader._item.getNode(itemObj.id)
+        : ModelLoader._effect.getNode(itemObj.itemWhileCarrying);
     utils.scaleLongestSideToSize(mesh, itemObj.scalePlayer);
-    TweenMax.to(mesh.rotation, 1, {
+    TweenMax.to(mesh.rotation, itemObj.spinSpeedWhileCarrying, {
       y: Math.PI * 2,
       repeat: -1,
       repeatDelay: 0,
       ease: Linear.easeNone,
     });
-    // const width = this.getWidth(mesh);
     return { id: itemObj.id, mesh: mesh };
   };
 
@@ -257,8 +259,7 @@ export class GameMap {
           const pickedItem = entity.itemList[0];
           player.dropItem();
           new ItemPickupAnimation(itemMesh, player, () => {});
-
-          player.carriedItem = this.getItem(pickedItem);
+          player.carriedItem = this.getItemWhileCarryingMesh(pickedItem);
           player.itemInUse = false;
           this.activeItemTimeout = setTimeout(() => {
             player.itemIsActive = true;

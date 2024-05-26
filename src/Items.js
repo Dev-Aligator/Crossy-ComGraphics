@@ -9,6 +9,8 @@ export default {
     alignOffset: 0,
     timeOut: 5000,
     activeTime: 100,
+    whileCarrying: "self",
+    spinSpeedWhileCarrying: 1,
   },
 
   revive_crystal: {
@@ -17,11 +19,14 @@ export default {
     rate: 0.2,
     rotateY: Math.PI,
     scaleGround: 0.45,
+    scalePlayer: 0.25,
     alignOffset: 0.2,
     timeOut: 5000,
     activeTime: 100,
     effect: true,
     itemFunction: reviveFunction,
+    whileCarrying: "angle_ring",
+    spinSpeedWhileCarrying: 5,
   },
 };
 
