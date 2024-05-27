@@ -15,6 +15,7 @@ import {
   PlayerIdleAnimation,
   PlayerPositionAnimation,
   ItemPositionAnimation,
+  ItemTimeoutAnimation,
 } from "./Animations";
 const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -44,6 +45,7 @@ export default class CrossyPlayer extends Group {
     this.itemInUse = false;
     this.isProtected = false;
     this.checkpoint = null;
+    this.disableMoving = false;
     this.height = this.getHeight(node);
     this.width = this.getWidth(node);
   }
@@ -58,9 +60,13 @@ export default class CrossyPlayer extends Group {
 
   dropItem() {
     if (this.carriedItem) {
-      this.scene_world.remove(this.carriedItem.mesh);
-      this.carriedItem = null;
-      this.itemIsActive = false;
+      new ItemTimeoutAnimation(this.carriedItem.mesh, {
+        onComplete: () => {
+          this.scene_world.remove(this.carriedItem.mesh);
+          this.carriedItem = null;
+          this.itemIsActive = false;
+        },
+      });
     }
   }
   getHeight = (mesh) => {
@@ -123,6 +129,7 @@ export default class CrossyPlayer extends Group {
     this.ridingOn = null;
     this.ridingOnOffset = null;
     this.isAlive = true;
+    this.disableMoving = false;
   }
 
   skipPendingMovement() {
