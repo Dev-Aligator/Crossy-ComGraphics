@@ -1,4 +1,5 @@
-import { Box3, Mesh } from "three";
+import { Box3 } from "three";
+import { Platform } from "react-native";
 
 export function GetHeight(mesh) {
   let box3 = new Box3();
@@ -26,4 +27,13 @@ export function ScaleMeshWidthToSize(mesh, size) {
   } = new Box3().setFromObject(mesh).getSize(new THREE.Vector3());
   const scale = size / width;
   mesh.scale.set(scale, scale, scale);
+}
+
+export function generateTextShadow(width) {
+  return Platform.select({
+    web: {
+      textShadow: `-${width}px 0px 0px #000, ${width}px 0px 0px #000, 0px -${width}px 0px #000, 0px ${width}px 0px #000`,
+    },
+    default: {},
+  });
 }
