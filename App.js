@@ -52,6 +52,12 @@ function AssetLoading({ setIsLoading, children }) {
     models: modelsLoaded,
   });
 
+  React.useEffect(() => {
+    if (modelsLoaded && fontLoaded && audioLoaded) {
+      setIsLoading(false);
+    }
+  }, [modelsLoaded, fontLoaded, audioLoaded]);
+
   if (modelLoadingError) {
     return (
       <ErrorScreen
@@ -69,7 +75,6 @@ function AssetLoading({ setIsLoading, children }) {
     );
   }
   if (modelsLoaded && fontLoaded && audioLoaded) {
-    setTimeout(() => setIsLoading(false), 3000);
     return children;
   }
 

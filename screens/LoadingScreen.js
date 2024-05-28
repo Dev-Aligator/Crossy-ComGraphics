@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { StyleSheet, View, Text, Animated } from "react-native";
 import { generateTextShadow } from "../src/utils/ThreeUtils";
-
+import { ClipLoader } from "react-spinners";
 class Loading extends Component {
   textShadow = generateTextShadow(4);
   render() {
@@ -12,6 +12,8 @@ class Loading extends Component {
           source={require("../assets/images/loading.png")}
           style={loadingStyles.image}
         ></Animated.Image>
+
+        <ClipLoader color={"white"} loading={true} size={150} />
       </View>
     );
   }
@@ -26,10 +28,9 @@ const loadingStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(16,75,122,1)",
+    backgroundColor: "#58c2e9",
     width: "100%",
     height: "100%",
-    zIndex: -1,
   },
   text: {
     color: "white",
