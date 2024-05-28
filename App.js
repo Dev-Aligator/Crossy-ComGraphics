@@ -9,6 +9,7 @@ import GameScreen from "./screens/GameScreen";
 import AudioManager from "./src/AudioManager";
 import { useResolvedValue } from "./src/hooks/useResolvedValue";
 import ModelLoader from "./src/ModelLoader";
+import LoadingScreen from "./screens/LoadingScreen";
 
 console.ignoredYellowBox = [
   "WebGL",
@@ -17,18 +18,22 @@ console.ignoredYellowBox = [
 ];
 
 export default function App() {
+  const [isLoading, setIsLoading] = React.useState(true);
   return (
-    <AssetLoading>
-      <SafeAreaProvider>
-        <GameProvider>
-          <GameScreen />
-        </GameProvider>
-      </SafeAreaProvider>
-    </AssetLoading>
+    <>
+      <AssetLoading setIsLoading={setIsLoading}>
+        <SafeAreaProvider>
+          <GameProvider>
+            <GameScreen />
+          </GameProvider>
+        </SafeAreaProvider>
+      </AssetLoading>
+      <LoadingScreen isLoading={isLoading}></LoadingScreen>
+    </>
   );
 }
 
-function AssetLoading({ children }) {
+function AssetLoading({ setIsLoading, children }) {
   const [fontLoaded] = useFonts({
     retro: require("./assets/fonts/retro.ttf"),
   });
@@ -64,6 +69,7 @@ function AssetLoading({ children }) {
     );
   }
   if (modelsLoaded && fontLoaded && audioLoaded) {
+    setTimeout(() => setIsLoading(false), 3000);
     return children;
   }
 
