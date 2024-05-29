@@ -1,23 +1,51 @@
-import { Component } from "react";
-import { StyleSheet, View, Text, Animated } from "react-native";
+import { Component, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Animated,
+  Image,
+  InteractionManager,
+} from "react-native";
 import { generateTextShadow } from "../src/utils/ThreeUtils";
 import { ClipLoader } from "react-spinners";
-class Loading extends Component {
-  textShadow = generateTextShadow(4);
-  render() {
-    return (
-      <View style={loadingStyles.container}>
-        <Text style={[loadingStyles.text, this.textShadow]}>Crossy Road</Text>
-        <Animated.Image
-          source={require("../assets/images/loading.png")}
-          style={loadingStyles.image}
-        ></Animated.Image>
+const Loading = () => {
+  const textShadow = generateTextShadow(4);
+  const animation = new Animated.Value(0);
+  const animatedImageStyle = {
+    transform: [
+      {
+        scale: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+        }),
+      },
+    ],
+  };
 
-        <ClipLoader color={"white"} loading={true} size={150} />
-      </View>
-    );
-  }
-}
+  useEffect(() => {
+    InteractionManager.runAfterInteractions((_) => {
+      Animated.timing(animation, {
+        useNativeDriver: true,
+        toValue: 1,
+        duration: 300,
+        delay: 0,
+      }).start();
+    });
+  }, []);
+
+  return (
+    <View style={loadingStyles.container}>
+      <Text style={[loadingStyles.text, textShadow]}>Crossy Road</Text>
+      <Animated.Image
+        source={require("../assets/images/loading.png")}
+        style={[loadingStyles.image, animatedImageStyle]}
+      ></Animated.Image>
+
+      <ClipLoader color={"white"} loading={true} size={150} />
+    </View>
+  );
+};
 
 const LoadingScreen = ({ isLoading }) => {
   return isLoading && <Loading />;
