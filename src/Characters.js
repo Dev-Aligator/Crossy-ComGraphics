@@ -25,7 +25,7 @@ export default {
     name: "Kim Yen",
     id: "KimYen",
     description:
-      "Kim Yen is a Data Analyst.",
+      "Kim Yen is a Data Analyst who loves to jump from job to job.",
     image: require("../assets/images/characters/KimYen.png"),
   },
   HoangTan: {
