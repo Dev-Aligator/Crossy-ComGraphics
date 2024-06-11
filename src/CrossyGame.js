@@ -4,9 +4,12 @@ import { Vibration } from "react-native";
 import {
   AmbientLight,
   DirectionalLight,
+  PointLight,
+  HemisphereLight,
   Group,
   OrthographicCamera,
   Scene,
+  MeshPhongMaterial
 } from "three";
 
 import AudioManager from "../src/AudioManager";
@@ -23,6 +26,8 @@ import { utils } from "expo-three";
 import ModelLoader from "./ModelLoader";
 import { ItemPickupAnimation } from "./Animations";
 import CarPiece from "./Particles/CarPieces";
+
+
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
 const useShadows = true;
@@ -37,29 +42,67 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0xdfebff, 1.75);
-    light.position.set(20, 50, 0.05);
-    light.castShadow = useShadows;
-    light.shadow.mapSize.width = 1024 * 2;
-    light.shadow.mapSize.height = 1024 * 2;
+    // Add ambient light
+    const ambientLight = new AmbientLight(0x404040, 1); 
+    this.add(ambientLight);
 
-    // light.position.set(20, 50, 60);
+    // Hemisphere light for more natural lighting
+    const hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, 0.3);
+    this.add(hemisphereLight);
 
-    const d = 15;
-    const v = 6;
-    light.shadow.camera.left = -d;
-    light.shadow.camera.right = 9;
-    light.shadow.camera.top = v;
-    light.shadow.camera.bottom = -v;
-    light.shadow.camera.far = 100;
-    light.shadow.bias = 0.0001;
+    // Directional light
+    const directionalLight = new DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(50, 100, 50);
+    directionalLight.castShadow = useShadows;
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
 
-    this.add(light);
-    this.light = light;
-    this.timeManager = new TimeManager({ light });
+    const d = 20;
+    directionalLight.shadow.camera.left = -d;
+    directionalLight.shadow.camera.right = d;
+    directionalLight.shadow.camera.top = d;
+    directionalLight.shadow.camera.bottom = -d;
+    directionalLight.shadow.camera.far = 500;
+    directionalLight.shadow.bias = -0.00001;
 
-    // let helper = new CameraHelper(light.shadow.camera);
-    // this.add(helper);
+    this.add(directionalLight);
+    this.light = directionalLight;
+    this.timeManager = new TimeManager({ light: directionalLight });
+
+    // Point lights for better ambient lighting
+    const pointLight1 = new PointLight(0xffffff, 0.3, 100);
+    pointLight1.position.set(0, 20, 0);
+    this.add(pointLight1);
+
+    const pointLight2 = new PointLight(0xffffff, 0.3, 100);
+    pointLight2.position.set(0, -20, 0);
+    this.add(pointLight2);
+
+    // Update materials to use Phong shading
+    this.updateMaterialsToPhong();
+  }
+
+  updateMaterialsToPhong() {
+    this.world.traverse((child) => {
+      if (child.isMesh) {
+        // Ensure the child has a material property
+        if (child.material) {
+          // Create a new MeshPhongMaterial based on the existing material properties
+          const phongMaterial = new MeshPhongMaterial({
+              color: child.material.color,
+              emissive: child.material.emissive || 0x000000,
+              specular: 0x111111,
+              shininess: 30,
+              map: child.material.map || null,
+              normalMap: child.material.normalMap || null,
+              displacementMap: child.material.displacementMap || null,
+              displacementScale: child.material.displacementScale || 1,
+              displacementBias: child.material.displacementBias || 0,
+          });
+          child.material = phongMaterial;
+        }
+      }
+    });
   }
 
   setShadowsEnabled(enabled) {
