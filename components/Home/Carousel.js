@@ -25,6 +25,9 @@ const Carousel = (props) => {
     4: "palmer",
     5: "juwan",
     6: "cser",
+    7: "KimYen",
+    8: "HoangTan",
+    9: "TramAnh",
   };
 
   const getCharacterIndex = (name) => {

@@ -53,4 +53,25 @@ export default {
       "CS-er is a computer science student at UIT. He is not a React Native expert and struggle with Computer Graphics course  .",
     image: require("../assets/images/characters/cs_er.png"),
   },
+  KimYen: {
+    name: "Kim Yen",
+    id: "KimYen",
+    description:
+      "Kim Yen is a Data Analyst.",
+    image: require("../assets/images/characters/KimYen.png"),
+  },
+  HoangTan: {
+    name: "Hoang Tan",
+    id: "HoangTan",
+    description:
+      "Hoang Tan is a Software Engineer.",
+    image: require("../assets/images/characters/HoangTan.png"),
+  },
+  TramAnh: {
+    name: "Tram Anh",
+    id: "TramAnh",
+    description:
+      "Tram Anh is a Designer.",
+    image: require("../assets/images/characters/TramAnh.png"),
+  },
 };
