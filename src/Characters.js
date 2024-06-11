@@ -58,7 +58,7 @@ export default {
     id: "KimYen",
     description:
       "Kim Yen is a Data Analyst.",
-    image: require("../assets/images/characters/cs_er.png"),
+    image: require("../assets/images/characters/KimYen.png"),
   },
   HoangTan: {
     name: "Hoang Tan",
@@ -72,6 +72,6 @@ export default {
     id: "TramAnh",
     description:
       "Tram Anh is a Designer.",
-    image: require("../assets/images/characters/cs_er.png"),
+    image: require("../assets/images/characters/TramAnh.png"),
   },
 };
