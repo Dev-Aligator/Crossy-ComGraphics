@@ -2,6 +2,9 @@ export default {
   chicken: {
     name: 'Chicken',
     id: 'chicken',
+    description:
+    "The chicken who crossed the road. It's a mystery why it crossed the road.",
+    image: require("../assets/images/characters/chicken.png"),
   },
   bacon: {
     name: "Bacon",

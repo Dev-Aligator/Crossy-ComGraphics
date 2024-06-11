@@ -18,16 +18,12 @@ import { motion } from "framer-motion";
 
 const Carousel = (props) => {
   const characterMap = {
-    0: "bacon",
-    1: "brent",
-    2: "avocoder",
-    3: "wheeler",
-    4: "palmer",
-    5: "juwan",
-    6: "cser",
-    7: "KimYen",
-    8: "HoangTan",
-    9: "TramAnh",
+    0: "chicken",
+    1: "bacon",
+    2: "cser",
+    3: "KimYen",
+    4: "HoangTan",
+    5: "TramAnh",
   };
 
   const getCharacterIndex = (name) => {
