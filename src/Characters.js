@@ -32,7 +32,7 @@ export default {
     name: "Hoang Tan",
     id: "HoangTan",
     description:
-      "Hoang Tan is a Software Engineer.",
+      "Hoang Tan is a Software Engineer who is obbsessed with Alligators and Arch Linux.",
     image: require("../assets/images/characters/HoangTan.png"),
   },
   TramAnh: {
