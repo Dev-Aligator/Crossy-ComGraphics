@@ -1,3 +1,5 @@
+import { m } from "framer-motion";
+
 export default {
   environment: {
     grass: {
@@ -181,6 +183,18 @@ export default {
     cser: {
       model: require("../assets/models/characters/cser/cser.obj"),
       texture: require("../assets/models/characters/cser/cser.png"),
+    },
+    KimYen: {
+      model: require("../assets/models/characters/KimYen/KimYen.obj"),
+      texture: require("../assets/models/characters/KimYen/KimYen.png"),
+    },
+    HoangTan: {
+      model: require("../assets/models/characters/HoangTan/HoangTan.obj"),
+      texture: require("../assets/models/characters/HoangTan/HoangTan.png"),
+    },
+    TramAnh: {
+      model: require("../assets/models/characters/TramAnh/TramAnh.obj"),
+      texture: require("../assets/models/characters/TramAnh/TramAnh.png"),
     },
   },
   items: {
